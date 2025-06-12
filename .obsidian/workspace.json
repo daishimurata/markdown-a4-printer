@@ -1,0 +1,239 @@
+{
+  "main": {
+    "id": "67b4a87476fd1432",
+    "type": "split",
+    "children": [
+      {
+        "id": "4fda03731dfbf67a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a026096fbe198cfc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "DailyReports/2025-06-12_支援記録.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2025-06-12_支援記録"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "ed7023b8dfe2fb58",
+    "type": "split",
+    "children": [
+      {
+        "id": "1c058d58be6f66f9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "20f4d3b410053209",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "ファイルエクスプローラ"
+            }
+          },
+          {
+            "id": "5c024f90980e57af",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "検索"
+            }
+          },
+          {
+            "id": "6b6d9685f28fed52",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "ブックマーク"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8540e9a6092ba3f9",
+    "type": "split",
+    "children": [
+      {
+        "id": "90bbaad85705f8ac",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "075d69865c63fb9b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "People/水谷珠美.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "水谷珠美へのバックリンク"
+            }
+          },
+          {
+            "id": "bf51d6ccca1738fe",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "People/水谷珠美.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "水谷珠美からのアウトゴーイングリンク"
+            }
+          },
+          {
+            "id": "0d1587c86615cfc6",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "タグ"
+            }
+          },
+          {
+            "id": "b05fc170cc14906b",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "People/水谷珠美.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "水谷珠美のアウトライン"
+            }
+          },
+          {
+            "id": "eae3ca47a39ded74",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          },
+          {
+            "id": "2da4b6351a93657f",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {},
+              "icon": "spreadsheet",
+              "title": "Advanced Tables"
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:クイックスイッチャーを開く": false,
+      "graph:グラフビューを開く": false,
+      "canvas:新規キャンバスを作成": false,
+      "daily-notes:今日のデイリーノートを開く": false,
+      "templates:テンプレートを挿入": false,
+      "command-palette:コマンドパレットを開く": false,
+      "templater-obsidian:Templater": false,
+      "dbfolder:Create a new database table": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "obsidian-kanban:カンバンボードを新規作成": false,
+      "obsidian-git:Open Git source control": false,
+      "markdown-importer:Markdownインポーターを開く": false,
+      "periodic-notes:Open today": false
+    }
+  },
+  "active": "a026096fbe198cfc",
+  "lastOpenFiles": [
+    "README.md",
+    "Templates/フェイスシートテンプレート.md",
+    "markdown-a4-printer/フェイスシートテンプレート.md",
+    "柿内 環奈/柿内環奈　フェイスシート.md",
+    "DailyReports/2025-06-12_支援記録.md",
+    "portable.html",
+    "markdown-printer-portable.html",
+    "markdown-a4-printer/examples/technical-spec.md",
+    "markdown-a4-printer/examples/business-doc.md",
+    "markdown-a4-printer/examples/sample.md",
+    "Untitled",
+    "Untitled 1",
+    "2025-06-12.md",
+    "portable-version.html",
+    "standalone.html",
+    "柿内 環奈/柿内環奈基本情報_old.md",
+    "柿内 環奈/柿内環奈 - 総合インデックス_old.md",
+    "DailyReports/2025-06-11_支援記録.md",
+    "sample-test.md",
+    "test.html",
+    "markdown-a4-printer/README.md",
+    "markdown-a4-printer/index.html",
+    "2025-06-11.md",
+    "DailyReports/2025-06-10_支援記録.md",
+    "Templates/daily_tomorrow.md",
+    "Templates/create_daily_reports.md",
+    "DailyReports/test_2025-06-11_支援記録.md",
+    "Templates/daily_simple_test.md",
+    "📝 Database Folder設定手順（詳細版）.md",
+    "📋 日報システム使用ガイド.md",
+    "📋 日報テンプレート最終確認.md",
+    "Staff/吉澤冬美.md",
+    "Templates/daily_auto_generated.md",
+    "Templates/daily_simple.md",
+    "ClientFaceSheets",
+    "StaffShifts",
+    "無題のファイル.canvas"
+  ]
+}

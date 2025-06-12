@@ -1,0 +1,37 @@
+{
+  "showGettingStartedBanner": true,
+  "hasMigratedDailyNoteSettings": false,
+  "hasMigratedWeeklyNoteSettings": false,
+  "daily": {
+    "enabled": true,
+    "format": "YYYY-MM-DD_支援記録",
+    "folder": "DailyReports",
+    "template": ".templates/daily_report.md"
+  },
+  "weekly": {
+    "enabled": false,
+    "format": "",
+    "folder": "",
+    "template": ""
+  },
+  "monthly": {
+    "enabled": false,
+    "format": "",
+    "folder": "",
+    "template": ""
+  },
+  "quarterly": {
+    "enabled": false,
+    "format": "",
+    "folder": "",
+    "template": ""
+  },
+  "yearly": {
+    "enabled": false,
+    "format": "",
+    "folder": "",
+    "template": ""
+  },
+  "hasTasks": false,
+  "localeOverride": "ja"
+}

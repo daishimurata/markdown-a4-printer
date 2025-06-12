@@ -1,0 +1,418 @@
+/* ===== Print Styles - A4 Optimization ===== */
+
+/* Page Setup */
+@page {
+  size: A4;
+  margin: 20mm;
+  
+  @bottom-center {
+    content: "- " counter(page) " -";
+    font-family: var(--font-family);
+    font-size: 9pt;
+    color: #666666;
+    margin-top: 10mm;
+  }
+}
+
+/* Print-only variables */
+@media print {
+  :root {
+    --font-size-base: 10pt;
+    --font-size-small: 9pt;
+    --font-size-large: 12pt;
+    --font-size-xlarge: 16pt;
+    --line-height-base: 1.4;
+    --line-height-tight: 1.2;
+    --spacing-xs: 2pt;
+    --spacing-sm: 4pt;
+    --spacing-md: 8pt;
+    --spacing-lg: 12pt;
+    --spacing-xl: 16pt;
+    --spacing-xxl: 24pt;
+  }
+
+  /* Hide non-print elements */
+  .no-print,
+  .control-panel,
+  .loading-screen,
+  .error-toast,
+  .success-toast {
+    display: none !important;
+  }
+
+  /* Body adjustments */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: var(--font-size-base) !important;
+    line-height: var(--line-height-base) !important;
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Document container for print */
+  .document-container {
+    width: 100% !important;
+    max-width: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Document header for print */
+  .document-header {
+    border-bottom: 1px solid #CCCCCC !important;
+    background: white !important;
+    padding: var(--spacing-lg) 0 var(--spacing-md) 0 !important;
+    margin-bottom: var(--spacing-lg) !important;
+  }
+
+  .document-title {
+    font-size: var(--font-size-xlarge) !important;
+    font-weight: 600 !important;
+    color: black !important;
+  }
+
+  .document-date {
+    font-size: var(--font-size-small) !important;
+    color: #666666 !important;
+  }
+
+  /* Document content for print */
+  .document-content {
+    padding: 0 !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Hide welcome message in print */
+  .welcome-message {
+    display: none !important;
+  }
+
+  /* Document footer for print */
+  .document-footer {
+    border-top: 1px solid #CCCCCC !important;
+    background: white !important;
+    padding: var(--spacing-md) 0 0 0 !important;
+    margin-top: var(--spacing-lg) !important;
+    text-align: center !important;
+  }
+
+  .footer-info {
+    font-size: 8pt !important;
+    color: #666666 !important;
+  }
+
+  /* Typography for print */
+  h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1 {
+    font-size: 16pt !important;
+    border-bottom: 2pt solid #CCCCCC !important;
+    padding-bottom: var(--spacing-sm) !important;
+    margin-top: var(--spacing-xl) !important;
+    margin-bottom: var(--spacing-lg) !important;
+  }
+
+  h2 {
+    font-size: 14pt !important;
+    border-bottom: 1pt solid #CCCCCC !important;
+    padding-bottom: var(--spacing-xs) !important;
+    margin-top: var(--spacing-xl) !important;
+    margin-bottom: var(--spacing-md) !important;
+  }
+
+  h3 {
+    font-size: 12pt !important;
+    margin-top: var(--spacing-lg) !important;
+    margin-bottom: var(--spacing-md) !important;
+  }
+
+  h4 {
+    font-size: 11pt !important;
+    margin-top: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  h5 {
+    font-size: 10pt !important;
+    margin-top: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  h6 {
+    font-size: 10pt !important;
+    color: #333333 !important;
+    margin-top: var(--spacing-sm) !important;
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  /* Paragraphs */
+  p {
+    margin-bottom: var(--spacing-md) !important;
+    color: black !important;
+    line-height: var(--line-height-base) !important;
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Text formatting */
+  strong {
+    font-weight: 600 !important;
+    color: black !important;
+  }
+
+  em {
+    font-style: italic !important;
+    color: black !important;
+  }
+
+  /* Code formatting */
+  code {
+    background-color: #F5F5F5 !important;
+    padding: 1pt 2pt !important;
+    border-radius: 2pt !important;
+    font-family: var(--font-mono) !important;
+    font-size: 9pt !important;
+    color: black !important;
+    border: 0.5pt solid #CCCCCC !important;
+  }
+
+  pre {
+    background-color: #F8F8F8 !important;
+    border: 1pt solid #CCCCCC !important;
+    padding: var(--spacing-md) !important;
+    border-radius: 3pt !important;
+    overflow: visible !important;
+    margin-bottom: var(--spacing-md) !important;
+    page-break-inside: avoid;
+  }
+
+  pre code {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 9pt !important;
+    color: black !important;
+  }
+
+  /* Lists */
+  ul, ol {
+    margin-bottom: var(--spacing-md) !important;
+    padding-left: var(--spacing-lg) !important;
+    page-break-inside: avoid;
+  }
+
+  li {
+    margin-bottom: var(--spacing-xs) !important;
+    line-height: var(--line-height-base) !important;
+    color: black !important;
+    page-break-inside: avoid;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 2pt solid #999999 !important;
+    padding-left: var(--spacing-md) !important;
+    margin: var(--spacing-md) 0 !important;
+    font-style: italic !important;
+    color: #333333 !important;
+    background-color: #FAFAFA !important;
+    padding: var(--spacing-md) !important;
+    border-radius: 3pt !important;
+    page-break-inside: avoid;
+  }
+
+  /* Links */
+  a {
+    color: black !important;
+    text-decoration: underline !important;
+  }
+
+  a:after {
+    content: " (" attr(href) ")";
+    font-size: 8pt;
+    color: #666666;
+  }
+
+  /* Tables */
+  .table-wrapper {
+    margin: var(--spacing-md) 0 !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+    border: 1pt solid #CCCCCC !important;
+    page-break-inside: avoid;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 9pt !important;
+    background: white !important;
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+    text-align: left !important;
+    border-bottom: 0.5pt solid #CCCCCC !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  th {
+    background-color: #F5F5F5 !important;
+    font-weight: 600 !important;
+    color: black !important;
+    border-bottom: 1pt solid #999999 !important;
+  }
+
+  tbody tr:nth-child(even) td {
+    background-color: #FAFAFA !important;
+  }
+
+  /* Ensure table doesn't break across pages if possible */
+  table, tbody, thead, tr {
+    page-break-inside: avoid;
+  }
+
+  /* Page break utilities */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+
+  /* Remove shadows and borders */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Force black text for all elements */
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  /* Image handling */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  /* Remove interactive elements */
+  button,
+  input,
+  select,
+  textarea {
+    display: none !important;
+  }
+
+  /* Ensure proper spacing for print */
+  .document-content > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  .document-content > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Handle long URLs in print */
+  a[href^="http"]:after {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  /* Print optimization for specific elements */
+  .table-wrapper table {
+    font-size: 8pt !important;
+  }
+
+  .table-wrapper th,
+  .table-wrapper td {
+    padding: 3pt 6pt !important;
+  }
+
+  /* Compact mode adjustments */
+  body.compact-mode h1 {
+    font-size: 14pt !important;
+    margin-top: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  body.compact-mode h2 {
+    font-size: 12pt !important;
+    margin-top: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  body.compact-mode h3 {
+    font-size: 11pt !important;
+    margin-top: var(--spacing-sm) !important;
+    margin-bottom: var(--spacing-xs) !important;
+  }
+
+  body.compact-mode p {
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  body.compact-mode ul,
+  body.compact-mode ol {
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  body.compact-mode blockquote {
+    margin: var(--spacing-sm) 0 !important;
+    padding: var(--spacing-sm) !important;
+  }
+
+  body.compact-mode .table-wrapper {
+    margin: var(--spacing-sm) 0 !important;
+  }
+}
+
+/* Print preview mode (when not actually printing) */
+.print-preview-mode {
+  background: white !important;
+  color: black !important;
+}
+
+.print-preview-mode .document-container {
+  max-width: 210mm !important;
+  margin: 0 auto !important;
+  padding: 20mm !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.print-preview-mode .control-panel {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Dark mode adjustments for print */
+@media print and (prefers-color-scheme: dark) {
+  * {
+    background: white !important;
+    color: black !important;
+  }
+} 

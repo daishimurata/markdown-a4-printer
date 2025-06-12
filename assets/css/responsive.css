@@ -1,0 +1,457 @@
+/* ===== Responsive Design ===== */
+
+/* Tablet Styles (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+  body {
+    grid-template-columns: 280px 1fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .control-panel {
+    padding: var(--spacing-md);
+  }
+
+  .app-title {
+    font-size: 20px;
+  }
+
+  .title-icon {
+    font-size: 24px;
+  }
+
+  .document-content {
+    padding: var(--spacing-lg);
+  }
+
+  .welcome-message {
+    padding: var(--spacing-xl);
+  }
+
+  .feature-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Landscape (568px - 768px) */
+@media screen and (max-width: 768px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+  }
+
+  .control-panel {
+    order: 2;
+    margin-top: var(--spacing-md);
+  }
+
+  .document-container {
+    order: 1;
+    min-height: 60vh;
+  }
+
+  .control-header {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .app-title {
+    font-size: 18px;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .title-icon {
+    font-size: 20px;
+  }
+
+  .control-actions {
+    gap: var(--spacing-md);
+  }
+
+  .button-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .document-content {
+    padding: var(--spacing-md);
+  }
+
+  .welcome-message {
+    padding: var(--spacing-lg);
+  }
+
+  .welcome-icon {
+    font-size: 36px;
+  }
+
+  .welcome-message h2 {
+    font-size: 20px;
+  }
+
+  .feature-list {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .header-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .footer-info {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    align-items: center;
+  }
+
+  /* Table responsiveness */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .document-content table {
+    min-width: 500px;
+  }
+
+  .document-content th,
+  .document-content td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-small);
+  }
+
+  /* Code blocks */
+  .document-content pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .document-content pre code {
+    font-size: 0.8em;
+  }
+}
+
+/* Mobile Portrait (320px - 568px) */
+@media screen and (max-width: 568px) {
+  body {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
+  }
+
+  .control-panel {
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+  }
+
+  .document-container {
+    border-radius: var(--border-radius);
+  }
+
+  .control-header {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .app-title {
+    font-size: 16px;
+  }
+
+  .app-subtitle {
+    font-size: 12px;
+  }
+
+  .title-icon {
+    font-size: 18px;
+  }
+
+  .file-input-label {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-small);
+  }
+
+  .file-drop-zone {
+    padding: var(--spacing-md);
+  }
+
+  .drop-zone-text {
+    font-size: 12px;
+  }
+
+  .button-group {
+    gap: var(--spacing-xs);
+  }
+
+  .btn {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-small);
+    min-width: 100px;
+  }
+
+  .btn-icon {
+    font-size: 14px;
+  }
+
+  .document-header {
+    padding: var(--spacing-md);
+  }
+
+  .document-title {
+    font-size: var(--font-size-base);
+  }
+
+  .document-date {
+    font-size: 12px;
+  }
+
+  .document-content {
+    padding: var(--spacing-sm);
+  }
+
+  .document-footer {
+    padding: var(--spacing-sm);
+  }
+
+  .welcome-message {
+    padding: var(--spacing-md);
+  }
+
+  .welcome-icon {
+    font-size: 32px;
+  }
+
+  .welcome-message h2 {
+    font-size: 18px;
+  }
+
+  .welcome-message p {
+    font-size: var(--font-size-small);
+  }
+
+  .feature-item {
+    padding: var(--spacing-xs);
+    font-size: 12px;
+  }
+
+  .feature-icon {
+    font-size: 14px;
+  }
+
+  /* Typography adjustments */
+  .document-content h1 {
+    font-size: 1.8em;
+  }
+
+  .document-content h2 {
+    font-size: 1.5em;
+  }
+
+  .document-content h3 {
+    font-size: 1.3em;
+  }
+
+  .document-content h4 {
+    font-size: 1.1em;
+  }
+
+  .document-content p {
+    font-size: var(--font-size-small);
+  }
+
+  /* Settings panel */
+  .settings-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 300px;
+    z-index: 1000;
+  }
+
+  /* Toast messages */
+  .error-toast,
+  .success-toast {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    left: var(--spacing-sm);
+    max-width: none;
+  }
+
+  .toast-content {
+    padding: var(--spacing-sm);
+  }
+
+  .toast-message {
+    font-size: 12px;
+  }
+
+  /* File info */
+  .file-info {
+    padding: var(--spacing-sm);
+  }
+
+  .info-item {
+    font-size: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+}
+
+/* Very small screens (< 320px) */
+@media screen and (max-width: 320px) {
+  .app-title {
+    font-size: 14px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .btn {
+    min-width: auto;
+  }
+
+  .feature-list {
+    grid-template-columns: 1fr;
+  }
+
+  .document-content table {
+    min-width: 280px;
+    font-size: 12px;
+  }
+
+  .document-content th,
+  .document-content td {
+    padding: 2px 4px;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .welcome-message {
+    padding: var(--spacing-md);
+  }
+
+  .welcome-icon {
+    font-size: 24px;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .welcome-message h2 {
+    font-size: 16px;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .feature-list {
+    grid-template-columns: 1fr 1fr;
+    max-width: 500px;
+  }
+
+  .control-panel {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2),
+       (min-resolution: 192dpi) {
+  .document-content {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+  }
+
+  .file-input-label {
+    min-height: 44px;
+  }
+
+  .template-select {
+    min-height: 44px;
+  }
+
+  .setting-label {
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .checkbox-custom {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Larger touch targets */
+  .toast-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .loading-spinner {
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #000000;
+    --separator: #000000;
+    --bg-tertiary: #FFFFFF;
+    --text-tertiary: #000000;
+  }
+
+  .btn-secondary {
+    border-width: 2px;
+  }
+
+  .file-drop-zone {
+    border-width: 3px;
+  }
+
+  .document-content table,
+  .document-content th,
+  .document-content td {
+    border-color: #000000;
+    border-width: 1px;
+  }
+}
+
+/* Dark mode responsive adjustments */
+@media (prefers-color-scheme: dark) {
+  /* Note: Main dark mode styles would be in main.css */
+  /* This section is for responsive-specific dark mode adjustments */
+  
+  @media screen and (max-width: 568px) {
+    .welcome-message {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: var(--border-radius);
+    }
+  }
+} 

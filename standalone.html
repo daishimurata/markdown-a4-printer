@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown A4 Printer - Standalone</title>
+  <meta name="description" content="Beautiful A4-optimized HTML conversion for Markdown documents">
+  
+  <style>
+/* ===== CSS Variables ===== */
+:root {
+  /* Color Palette - Grayscale */
+  --primary-color: #000000;
+  --secondary-color: #333333;
+  --accent-color: #666666;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-tertiary: #666666;
+  --text-quaternary: #999999;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F8F8;
+  --bg-tertiary: #F0F0F0;
+  --bg-table-header: #F5F5F5;
+  --bg-table-stripe: #FAFAFA;
+  --border-color: #E0E0E0;
+  --separator: #D0D0D0;
+  --line-accent: #999999;
+  
+  /* Component Colors */
+  --control-bg: #FBFBFB;
+  --control-border: #E8E8E8;
+  --button-primary: #000000;
+  --button-secondary: #F5F5F5;
+  --button-ghost: transparent;
+  --button-hover: #333333;
+  --input-bg: #FFFFFF;
+  --input-border: #CCCCCC;
+  --input-focus: #000000;
+  
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-mono: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-size-base: 16px;
+  --font-size-small: 14px;
+  --font-size-large: 18px;
+  --font-size-xlarge: 24px;
+  --line-height-base: 1.6;
+  --line-height-tight: 1.4;
+  --line-height-loose: 1.8;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  /* Sizing */
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  
+  /* Document Sizing */
+  --document-width: 210mm;
+  --document-padding: 20mm;
+  --document-margin: var(--spacing-lg);
+}
+
+/* ===== Base Styles ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  font-weight: 400;
+  background-color: var(--bg-secondary);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+/* ===== Loading Screen ===== */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-color);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--spacing-md);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Control Panel Styles */
+.control-panel {
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  height: fit-content;
+  box-shadow: var(--shadow-sm);
+}
+
+.control-header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.app-title {
+  font-size: var(--font-size-xlarge);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.title-icon {
+  font-size: 28px;
+}
+
+.app-subtitle {
+  font-size: var(--font-size-small);
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.control-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.file-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.file-input-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--button-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-weight: 500;
+}
+
+.file-input-label:hover {
+  background-color: var(--bg-tertiary);
+  border-color: var(--accent-color);
+}
+
+.file-input {
+  display: none;
+}
+
+.file-drop-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xl);
+  text-align: center;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.file-drop-zone.drag-over {
+  border-color: var(--primary-color);
+  background-color: var(--bg-tertiary);
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  background: none;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--button-primary);
+  color: white;
+  border-color: var(--button-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--button-hover);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-tertiary);
+}
+
+/* Document Container */
+.document-container {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  max-width: var(--document-width);
+  margin: 0 auto;
+}
+
+.document-content {
+  padding: var(--document-padding);
+  min-height: 400px;
+}
+
+.welcome-message {
+  text-align: center;
+  padding: var(--spacing-xxl);
+}
+
+.welcome-message h2 {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.document-content h1,
+.document-content h2,
+.document-content h3,
+.document-content h4,
+.document-content h5,
+.document-content h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.document-content h1 {
+  font-size: 2.25rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: var(--spacing-sm);
+}
+
+.document-content h2 {
+  font-size: 1.875rem;
+}
+
+.document-content h3 {
+  font-size: 1.5rem;
+}
+
+.document-content p {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-secondary);
+}
+
+.document-content code {
+  background-color: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+.document-content pre {
+  background-color: var(--bg-tertiary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+}
+
+.document-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.document-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-md) 0;
+}
+
+.document-content th,
+.document-content td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.document-content th {
+  background-color: var(--bg-table-header);
+  font-weight: 600;
+}
+
+.document-content tr:nth-child(even) {
+  background-color: var(--bg-table-stripe);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.no-print {
+  display: block;
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    display: block;
+    padding: 0;
+    margin: 0;
+    background: white;
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .document-container {
+    box-shadow: none;
+    border-radius: 0;
+    max-width: none;
+    width: 100%;
+  }
+  
+  .document-content {
+    padding: 20mm;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    grid-template-columns: 1fr;
+    padding: var(--spacing-md);
+  }
+  
+  .control-panel {
+    margin-bottom: var(--spacing-lg);
+  }
+}
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-spinner"></div>
+    <p>Loading Markdown A4 Printer...</p>
+  </div>
+
+  <!-- Control Panel -->
+  <div class="control-panel no-print" id="controlPanel">
+    <div class="control-header">
+      <h1 class="app-title">
+        <span class="title-icon">📄</span>
+        Markdown A4 Printer
+      </h1>
+      <p class="app-subtitle">Beautiful A4-optimized document conversion</p>
+    </div>
+
+    <div class="control-actions">
+      <!-- File Input Section -->
+      <div class="file-input-section">
+        <label for="fileInput" class="file-input-label">
+          <span class="file-input-icon">📁</span>
+          <span class="file-input-text">Load Markdown File</span>
+          <input type="file" id="fileInput" accept=".md,.markdown,.txt" class="file-input" />
+        </label>
+        <div class="file-drop-zone" id="fileDropZone">
+          <span class="drop-zone-icon">⬇️</span>
+          <p class="drop-zone-text">Or drag & drop your .md file here</p>
+        </div>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="button-group">
+        <button id="printBtn" class="btn btn-primary" disabled>
+          <span class="btn-icon">🖨️</span>
+          Print A4
+        </button>
+        <button id="downloadBtn" class="btn btn-secondary" disabled>
+          <span class="btn-icon">💾</span>
+          Save HTML
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Container -->
+  <div class="document-container" id="documentContainer">
+    <!-- Main Content Area -->
+    <div class="document-content" id="documentContent">
+      <div class="welcome-message">
+        <div class="welcome-icon">📝</div>
+        <h2>Welcome to Markdown A4 Printer</h2>
+        <p>Load a Markdown file to start converting it to beautiful A4-ready HTML.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simplified Markdown Parser
+    class SimpleMarkdownParser {
+      convert(markdown) {
+        if (!markdown) return '';
+        
+        let html = markdown;
+        
+        // Headers
+        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        
+        // Bold and Italic
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Code blocks
+        html = html.replace(/```[\s\S]*?```/g, (match) => {
+          const code = match.replace(/```(\w+)?\n?/, '').replace(/```$/, '');
+          return `<pre><code>${this.escapeHtml(code)}</code></pre>`;
+        });
+        
+        // Inline code
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+        
+        // Lists
+        html = html.replace(/^\* (.+)$/gm, '<li>$1</li>');
+        html = html.replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>');
+        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        
+        // Tables
+        html = html.replace(/\|(.+)\|\s*\n\|[-\s|]+\|\s*\n((?:\|.+\|\s*\n?)*)/g, (match, header, rows) => {
+          const headerCells = header.split('|').map(cell => `<th>${cell.trim()}</th>`).join('');
+          const bodyRows = rows.trim().split('\n').map(row => {
+            const cells = row.split('|').slice(1, -1).map(cell => `<td>${cell.trim()}</td>`).join('');
+            return `<tr>${cells}</tr>`;
+          }).join('');
+          return `<table><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+        });
+        
+        // Blockquotes
+        html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+        
+        // Horizontal rules
+        html = html.replace(/^---$/gm, '<hr>');
+        
+        // Paragraphs
+        html = html.replace(/\n\n/g, '</p><p>');
+        html = `<p>${html}</p>`;
+        html = html.replace(/<p><\/p>/g, '');
+        html = html.replace(/<p>(<h[1-6]>)/g, '$1');
+        html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<table>)/g, '$1');
+        html = html.replace(/(<\/table>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<pre>)/g, '$1');
+        html = html.replace(/(<\/pre>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<ul>)/g, '$1');
+        html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<blockquote>)/g, '$1');
+        html = html.replace(/(<\/blockquote>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<hr>)/g, '$1');
+        html = html.replace(/(<hr>)<\/p>/g, '$1');
+        
+        return html;
+      }
+      
+      escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+    }
+    
+    // Main Application
+    class MarkdownApp {
+      constructor() {
+        this.parser = new SimpleMarkdownParser();
+        this.init();
+      }
+      
+      init() {
+        this.hideLoadingScreen();
+        this.bindEvents();
+      }
+      
+      hideLoadingScreen() {
+        setTimeout(() => {
+          document.getElementById('loading-screen').classList.add('hidden');
+        }, 1000);
+      }
+      
+      bindEvents() {
+        const fileInput = document.getElementById('fileInput');
+        const fileDropZone = document.getElementById('fileDropZone');
+        const printBtn = document.getElementById('printBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+        
+        // Drag and drop
+        fileDropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          fileDropZone.classList.add('drag-over');
+        });
+        
+        fileDropZone.addEventListener('dragleave', () => {
+          fileDropZone.classList.remove('drag-over');
+        });
+        
+        fileDropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          fileDropZone.classList.remove('drag-over');
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            this.loadFile(files[0]);
+          }
+        });
+        
+        printBtn.addEventListener('click', () => {
+          window.print();
+        });
+        
+        downloadBtn.addEventListener('click', () => {
+          this.downloadHtml();
+        });
+      }
+      
+      handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+          this.loadFile(file);
+        }
+      }
+      
+      async loadFile(file) {
+        try {
+          const text = await this.readFileAsText(file);
+          const html = this.parser.convert(text);
+          this.renderDocument(html);
+          this.enableButtons();
+        } catch (error) {
+          alert('ファイルの読み込みに失敗しました: ' + error.message);
+        }
+      }
+      
+      readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = (e) => reject(new Error('File reading failed'));
+          reader.readAsText(file, 'UTF-8');
+        });
+      }
+      
+      renderDocument(html) {
+        const content = document.getElementById('documentContent');
+        content.innerHTML = html;
+      }
+      
+      enableButtons() {
+        document.getElementById('printBtn').disabled = false;
+        document.getElementById('downloadBtn').disabled = false;
+      }
+      
+      downloadHtml() {
+        const content = document.getElementById('documentContent').innerHTML;
+        const fullHtml = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Document</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1, h2, h3, h4, h5, h6 { color: #333; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    code { background-color: #f4f4f4; padding: 2px 4px; border-radius: 3px; }
+    pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    blockquote { border-left: 4px solid #ddd; margin: 0; padding: 0 16px; }
+  </style>
+</head>
+<body>
+${content}
+</body>
+</html>`;
+        
+        const blob = new Blob([fullHtml], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'document.html';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    }
+    
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', () => {
+      new MarkdownApp();
+    });
+  </script>
+</body>
+</html> 
