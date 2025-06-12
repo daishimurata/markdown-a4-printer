@@ -1,0 +1,50 @@
+# 個人情報が含まれる可能性のあるファイル
+*.md
+!README.md
+
+# Obsidianファイル
+.obsidian/
+*.obsidian
+
+# 個人データディレクトリ
+People/
+Staff/
+Templates/
+ClientFaceSheets/
+**/個人*
+**/利用者*
+**/クライアント*
+
+# バックアップファイル
+*.bak
+*.backup
+*~
+
+# 一時ファイル
+*.tmp
+*.temp
+
+# ログファイル
+*.log
+
+# 設定ファイル（個人設定含む）
+config.json
+settings.json
+.env
+.env.local
+
+# データベースファイル
+*.db
+*.sqlite
+*.sqlite3
+
+# 画像ファイル（個人写真等の可能性）
+# 必要に応じてコメントアウト
+# *.jpg
+# *.jpeg
+# *.png
+# *.gif
+
+# その他の除外したいファイル
+sample-test.md
+*-test.* 
