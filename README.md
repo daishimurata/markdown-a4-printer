@@ -4,7 +4,7 @@ Beautiful A4-optimized HTML conversion for Markdown documents.
 
 ## 🚀 ライブデモ
 
-**[Markdown A4 Printer を使ってみる](https://[YOUR-USERNAME].github.io/markdown-a4-printer/)**
+**[Markdown A4 Printer を使ってみる](https://daishimurata.github.io/markdown-a4-printer/)**
 
 ## ✨ 特徴
 
