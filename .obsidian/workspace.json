@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DailyReports/2025-06-12_支援記録.md",
+                "file": "柿内 環奈/柿内環奈　フェイスシート.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2025-06-12_支援記録"
+              "title": "柿内環奈　フェイスシート"
             }
           }
         ]
@@ -176,7 +176,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -198,16 +199,16 @@
   },
   "active": "a026096fbe198cfc",
   "lastOpenFiles": [
+    "Templates/フェイスシートテンプレート.md",
+    "DailyReports/2025-06-12_支援記録.md",
     "markdown-a4-printer-clean/LICENSE",
     "LICENSE",
     "markdown-a4-printer-clean/README.md",
     "markdown-a4-printer-clean/index.html",
     "markdown-a4-printer-clean",
     "README.md",
-    "Templates/フェイスシートテンプレート.md",
     "markdown-a4-printer/フェイスシートテンプレート.md",
     "柿内 環奈/柿内環奈　フェイスシート.md",
-    "DailyReports/2025-06-12_支援記録.md",
     "portable.html",
     "markdown-printer-portable.html",
     "markdown-a4-printer/examples/technical-spec.md",
@@ -222,7 +223,6 @@
     "柿内 環奈/柿内環奈 - 総合インデックス_old.md",
     "DailyReports/2025-06-11_支援記録.md",
     "sample-test.md",
-    "test.html",
     "markdown-a4-printer/README.md",
     "2025-06-11.md",
     "DailyReports/2025-06-10_支援記録.md",
