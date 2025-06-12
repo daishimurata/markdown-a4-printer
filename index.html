@@ -217,12 +217,16 @@
       width: 100%;
       border-collapse: collapse;
       margin: 16px 0;
+      table-layout: fixed;
+      border: 1px solid #ddd;
     }
     
     .document-content th, .document-content td {
       padding: 12px;
       text-align: left;
-      border-bottom: 1px solid #ddd;
+      border: 1px solid #ddd;
+      word-wrap: break-word;
+      vertical-align: top;
     }
     
     .document-content th {
@@ -232,6 +236,46 @@
     
     .document-content tr:nth-child(even) {
       background: #fafafa;
+    }
+    
+    /* テーブル列幅の自動調整 */
+    .document-content table.auto-layout {
+      table-layout: auto;
+    }
+    
+    /* 小さなテーブル用の列幅指定 */
+    .document-content table.small-table th,
+    .document-content table.small-table td {
+      min-width: 80px;
+    }
+    
+    /* 2列テーブル */
+    .document-content table.two-col th:first-child,
+    .document-content table.two-col td:first-child {
+      width: 30%;
+    }
+    
+    /* 3列テーブル */
+    .document-content table.three-col th:first-child,
+    .document-content table.three-col td:first-child {
+      width: 25%;
+    }
+    
+    .document-content table.three-col th:nth-child(2),
+    .document-content table.three-col td:nth-child(2) {
+      width: 35%;
+    }
+    
+    /* 4列テーブル */
+    .document-content table.four-col th,
+    .document-content table.four-col td {
+      width: 25%;
+    }
+    
+    /* 5列テーブル以上 */
+    .document-content table.five-col th,
+    .document-content table.five-col td {
+      width: 20%;
     }
     
     .document-content blockquote {
@@ -412,7 +456,16 @@
             const cells = row.split('|').slice(1, -1).map(cell => `<td>${cell.trim()}</td>`).join('');
             return `<tr>${cells}</tr>`;
           }).join('');
-          return `<table><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+          
+          // 列数に応じてクラスを決定
+          const columnCount = header.split('|').slice(1, -1).length;
+          let tableClass = '';
+          if (columnCount === 2) tableClass = 'two-col';
+          else if (columnCount === 3) tableClass = 'three-col';
+          else if (columnCount === 4) tableClass = 'four-col';
+          else if (columnCount >= 5) tableClass = 'five-col';
+          
+          return `<table class="${tableClass}"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
         });
         
         // 引用
@@ -556,6 +609,39 @@
       renderDocument(html) {
         const content = document.getElementById('documentContent');
         content.innerHTML = html;
+        
+        // テーブルの後処理
+        this.improveTableLayout();
+      }
+      
+      improveTableLayout() {
+        const tables = document.querySelectorAll('#documentContent table');
+        tables.forEach(table => {
+          // 既にクラスが設定されていない場合、列数に応じてクラスを設定
+          if (!table.className) {
+            const firstRow = table.querySelector('tr');
+            if (firstRow) {
+              const columnCount = firstRow.children.length;
+              if (columnCount === 2) table.className = 'two-col';
+              else if (columnCount === 3) table.className = 'three-col';
+              else if (columnCount === 4) table.className = 'four-col';
+              else if (columnCount >= 5) table.className = 'five-col';
+            }
+          }
+          
+          // 長いテキストがある場合は自動レイアウトに切り替え
+          const cells = table.querySelectorAll('td, th');
+          let hasLongText = false;
+          cells.forEach(cell => {
+            if (cell.textContent.length > 15) {
+              hasLongText = true;
+            }
+          });
+          
+          if (hasLongText) {
+            table.classList.add('auto-layout');
+          }
+        });
       }
       
       enableButtons() {
