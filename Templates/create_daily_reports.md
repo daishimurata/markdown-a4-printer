@@ -22,9 +22,9 @@ async function createDailyReports() {
         }
         
         // テンプレートファイルを取得
-        const templateFile = tp.file.find_tfile("daily_auto_generated");
+        const templateFile = tp.file.find_tfile("daily_report");
         if (!templateFile) {
-            new Notice("daily_auto_generated テンプレートが見つかりません");
+            new Notice("daily_report テンプレートが見つかりません");
             return;
         }
         

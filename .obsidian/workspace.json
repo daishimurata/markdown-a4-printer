@@ -11,14 +11,10 @@
             "id": "a026096fbe198cfc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "柿内 環奈/柿内環奈　フェイスシート.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "柿内環奈　フェイスシート"
+              "title": "新規タブ"
             }
           }
         ]
@@ -197,8 +193,21 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "a026096fbe198cfc",
+  "active": "20f4d3b410053209",
   "lastOpenFiles": [
+    "DailyReports/2025-06-13_支援記録.md",
+    "Templates/fixed_daily_report.md",
+    "Templates/test_new_daily.md",
+    "Templates/test_fixed_daily.md",
+    "Templates/demo_interactive_report.md",
+    "Templates/test_daily_generation.md",
+    "Templates/startup_daily_report.md",
+    "Templates/daily_report.md",
+    "柿内 環奈/柿内環奈　フェイスシート.md",
+    "山本 悠誠/実習記録.md",
+    "山本 悠誠/支援記録.md",
+    "山本 悠誠/基本情報.md",
+    "山本 悠誠",
     "Templates/フェイスシートテンプレート.md",
     "DailyReports/2025-06-12_支援記録.md",
     "markdown-a4-printer-clean/LICENSE",
@@ -208,7 +217,6 @@
     "markdown-a4-printer-clean",
     "README.md",
     "markdown-a4-printer/フェイスシートテンプレート.md",
-    "柿内 環奈/柿内環奈　フェイスシート.md",
     "portable.html",
     "markdown-printer-portable.html",
     "markdown-a4-printer/examples/technical-spec.md",
@@ -218,22 +226,11 @@
     "Untitled 1",
     "2025-06-12.md",
     "portable-version.html",
-    "standalone.html",
     "柿内 環奈/柿内環奈基本情報_old.md",
     "柿内 環奈/柿内環奈 - 総合インデックス_old.md",
     "DailyReports/2025-06-11_支援記録.md",
     "sample-test.md",
     "markdown-a4-printer/README.md",
-    "2025-06-11.md",
-    "DailyReports/2025-06-10_支援記録.md",
-    "Templates/daily_tomorrow.md",
-    "Templates/create_daily_reports.md",
-    "DailyReports/test_2025-06-11_支援記録.md",
-    "Templates/daily_simple_test.md",
-    "📝 Database Folder設定手順（詳細版）.md",
-    "📋 日報システム使用ガイド.md",
-    "📋 日報テンプレート最終確認.md",
-    "Staff/吉澤冬美.md",
     "無題のファイル.canvas"
   ]
 }
