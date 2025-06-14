@@ -1,6 +1,0 @@
-{
-  "autorun": true,
-  "format": "YYYY-MM-DD_支援記録",
-  "folder": "DailyReports",
-  "template": "Templates/daily_report.md"
-}
