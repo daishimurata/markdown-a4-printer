@@ -174,7 +174,21 @@
       padding-bottom: 8px;
     }
     
-    .document-content h2 { font-size: 1.875rem; }
+    .document-content h2 { 
+      font-size: 1.875rem; 
+      background: #f8f9fb;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border-left: 4px solid #4a5568;
+      margin: 32px 0 20px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    /* h2の直後のコンテンツをまとめてスタイリング */
+    .document-content h2 + * {
+      margin-top: 0;
+    }
+    
     .document-content h3 { font-size: 1.5rem; }
     .document-content h4 { font-size: 1.25rem; }
     
@@ -184,12 +198,12 @@
     }
     
     .document-content ul, .document-content ol {
-      margin: 16px 0;
+      margin: 12px 0;
       padding-left: 24px;
     }
     
     .document-content li {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     
     .document-content code {
@@ -216,22 +230,26 @@
     .document-content table {
       width: 100%;
       border-collapse: collapse;
-      margin: 16px 0;
+      margin: 12px 0;
       table-layout: fixed;
       border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
     .document-content th, .document-content td {
-      padding: 12px;
+      padding: 8px 12px;
       text-align: left;
-      border: 1px solid #ddd;
+      border: 1px solid #e2e8f0;
       word-wrap: break-word;
       vertical-align: top;
     }
     
     .document-content th {
-      background: #f5f5f5;
+      background: #d0d0d0;
       font-weight: 600;
+      color: #000;
     }
     
     .document-content tr:nth-child(even) {
@@ -358,8 +376,12 @@
       
       .document-content h2 {
         font-size: 14pt; /* Office文書レベル */
-        margin-top: 16pt;
-        margin-bottom: 10pt;
+        background: #f8f9fb !important;
+        padding: 12pt 16pt !important;
+        border-radius: 8pt !important;
+        border-left: 3pt solid #4a5568 !important;
+        margin: 16pt 0 12pt 0 !important;
+        box-shadow: 0 1pt 6pt rgba(0,0,0,0.05) !important;
       }
       
       .document-content h3 {
@@ -382,35 +404,38 @@
       
       /* パラグラフのスタイルをOffice文書レベルにする */
       .document-content p {
-        margin-bottom: 8pt; /* Office文書レベル */
+        margin-bottom: 6pt; /* より詰める */
         color: #333 !important;
       }
       
       /* リストのスタイルをOffice文書レベルにする */
       .document-content ul, .document-content ol {
-        margin: 8pt 0; /* Office文書レベル */
-        padding-left: 18pt; /* Office文書レベル */
+        margin: 6pt 0; /* より詰める */
+        padding-left: 16pt; /* より詰める */
       }
       
       .document-content li {
-        margin-bottom: 4pt; /* Office文書レベル */
+        margin-bottom: 3pt; /* より詰める */
       }
       
       /* テーブルのスタイルをOffice文書レベルにする */
       .document-content table {
         width: 100%;
         border-collapse: collapse;
-        margin: 10pt 0; /* Office文書レベル */
+        margin: 8pt 0; /* より詰める */
         table-layout: fixed;
         border: 1pt solid #999 !important;
+        border-radius: 6pt !important;
+        overflow: hidden !important;
         page-break-inside: avoid;
         font-size: 10pt; /* テーブル内はさらに小さく */
+        box-shadow: 0 0.5pt 2pt rgba(0,0,0,0.1) !important;
       }
       
       .document-content th, .document-content td {
-        padding: 6pt; /* Office文書レベル */
+        padding: 4pt 8pt; /* より詰める */
         text-align: left;
-        border: 1pt solid #999 !important;
+        border: 1pt solid #e2e8f0 !important;
         word-wrap: break-word;
         vertical-align: top;
       }
