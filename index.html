@@ -189,6 +189,38 @@
       margin-top: 0;
     }
     
+    /* セクション全体の背景スタイル */
+    .document-content .section-content {
+      background: #f8f9fb;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 8px 0 32px 0;
+      border-left: 4px solid #4a5568;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .document-content .section-content p,
+    .document-content .section-content ul,
+    .document-content .section-content ol,
+    .document-content .section-content table {
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .document-content .section-content p:first-child,
+    .document-content .section-content ul:first-child,
+    .document-content .section-content ol:first-child,
+    .document-content .section-content table:first-child {
+      margin-top: 0;
+    }
+    
+    .document-content .section-content p:last-child,
+    .document-content .section-content ul:last-child,
+    .document-content .section-content ol:last-child,
+    .document-content .section-content table:last-child {
+      margin-bottom: 0;
+    }
+    
     .document-content h3 { font-size: 1.5rem; }
     .document-content h4 { font-size: 1.25rem; }
     
@@ -382,6 +414,39 @@
         border-left: 3pt solid #4a5568 !important;
         margin: 16pt 0 12pt 0 !important;
         box-shadow: 0 1pt 6pt rgba(0,0,0,0.05) !important;
+      }
+      
+      /* セクション全体の背景スタイル（印刷時） */
+      .document-content .section-content {
+        background: #f8f9fb !important;
+        padding: 16pt !important;
+        border-radius: 8pt !important;
+        margin: 6pt 0 16pt 0 !important;
+        border-left: 3pt solid #4a5568 !important;
+        box-shadow: 0 1pt 4pt rgba(0,0,0,0.05) !important;
+        page-break-inside: avoid;
+      }
+      
+      .document-content .section-content p,
+      .document-content .section-content ul,
+      .document-content .section-content ol,
+      .document-content .section-content table {
+        margin-top: 8pt !important;
+        margin-bottom: 8pt !important;
+      }
+      
+      .document-content .section-content p:first-child,
+      .document-content .section-content ul:first-child,
+      .document-content .section-content ol:first-child,
+      .document-content .section-content table:first-child {
+        margin-top: 0 !important;
+      }
+      
+      .document-content .section-content p:last-child,
+      .document-content .section-content ul:last-child,
+      .document-content .section-content ol:last-child,
+      .document-content .section-content table:last-child {
+        margin-bottom: 0 !important;
       }
       
       .document-content h3 {
@@ -812,6 +877,9 @@
         
         // テーブルの後処理
         this.improveTableLayout();
+        
+        // セクション背景の後処理
+        this.addSectionBackgrounds();
       }
       
       improveTableLayout() {
@@ -840,6 +908,41 @@
           
           if (hasLongText) {
             table.classList.add('auto-layout');
+          }
+        });
+      }
+      
+      addSectionBackgrounds() {
+        const content = document.getElementById('documentContent');
+        const h2Elements = content.querySelectorAll('h2');
+        
+        h2Elements.forEach(h2 => {
+          const sectionText = h2.textContent.trim();
+          
+          // セクション2と3のみ処理
+          if (sectionText.match(/^[23]\./) || sectionText.includes('利用者及び家族の生活に対する意向') || sectionText.includes('総合的な支援の方針')) {
+            // h2の次の要素から次のh1/h2までの要素を収集
+            const sectionElements = [];
+            let nextElement = h2.nextElementSibling;
+            
+            while (nextElement && !nextElement.matches('h1, h2')) {
+              sectionElements.push(nextElement);
+              nextElement = nextElement.nextElementSibling;
+            }
+            
+            // セクションコンテンツを包むdivを作成
+            if (sectionElements.length > 0) {
+              const sectionDiv = document.createElement('div');
+              sectionDiv.className = 'section-content';
+              
+              // 要素をsectionDivに移動
+              sectionElements.forEach(element => {
+                sectionDiv.appendChild(element);
+              });
+              
+              // h2の後にsectionDivを挿入
+              h2.parentNode.insertBefore(sectionDiv, h2.nextSibling);
+            }
           }
         });
       }
