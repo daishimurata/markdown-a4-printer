@@ -561,11 +561,6 @@
         // 改行を正規化
         html = html.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
         
-        // 水平線の前後に空行を確保（確実に認識させるため）
-        html = html.replace(/\n(---+)\n/g, '\n\n$1\n\n');
-        html = html.replace(/\n(\*\*\*+)\n/g, '\n\n$1\n\n');
-        html = html.replace(/\n(___+)\n/g, '\n\n$1\n\n');
-        
         // コードブロックを一時的に保護
         const codeBlocks = [];
         html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
@@ -581,6 +576,11 @@
           inlineCodes.push(code);
           return `__INLINE_CODE_${index}__`;
         });
+        
+        // 水平線を最優先で処理（複数パターンに対応）
+        html = html.replace(/^(\s*)---+(\s*)$/gm, '\n<hr>\n');
+        html = html.replace(/^(\s*)\*\*\*+(\s*)$/gm, '\n<hr>\n');
+        html = html.replace(/^(\s*)___+(\s*)$/gm, '\n<hr>\n');
         
         // 見出し
         html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
@@ -622,33 +622,27 @@
         // 引用
         html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
         
-        // 水平線（複数パターンに対応）- より厳密にマッチング
-        html = html.replace(/^(\s*)---+(\s*)$/gm, '<hr>');
-        html = html.replace(/^(\s*)\*\*\*+(\s*)$/gm, '<hr>');
-        html = html.replace(/^(\s*)___+(\s*)$/gm, '<hr>');
-        
-        // 段落処理前に水平線を再度処理（念のため）
-        html = html.replace(/^---$/gm, '<hr>');
-        html = html.replace(/^\*\*\*$/gm, '<hr>');
-        html = html.replace(/^___$/gm, '<hr>');
-        
-        // 段落
-        html = html.split('\n\n').map(paragraph => {
+        // 段落処理を改善
+        html = html.split(/\n\s*\n/).map(paragraph => {
           paragraph = paragraph.trim();
           if (!paragraph) return '';
           
-          // 水平線の追加チェック
+          // 既にHTMLタグが含まれている場合はそのまま返す
+          if (paragraph.includes('<')) {
+            return paragraph;
+          }
+          
+          // 水平線の最終チェック
           if (paragraph.match(/^---+$/) || paragraph.match(/^\*\*\*+$/) || paragraph.match(/^___+$/)) {
             return '<hr>';
           }
           
-          if (paragraph.startsWith('<h') || paragraph.startsWith('<ul') || 
-              paragraph.startsWith('<table') || paragraph.startsWith('<blockquote') ||
-              paragraph.startsWith('<hr') || paragraph.startsWith('<pre')) {
-            return paragraph;
-          }
+          // 通常の段落として処理
           return `<p>${paragraph.replace(/\n/g, '<br>')}</p>`;
         }).join('\n');
+        
+        // 余分な改行を整理
+        html = html.replace(/\n+/g, '\n');
         
         // コードブロックを復元
         codeBlocks.forEach((code, index) => {
