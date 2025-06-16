@@ -105,6 +105,39 @@
       gap: 10pt;
     }
     
+    .watermark-controls {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .watermark-controls label {
+      display: block;
+      font-size: 11pt;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .watermark-controls select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background: #fff;
+      font-size: 10pt;
+      color: #333;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    
+    .watermark-controls select:focus {
+      outline: none;
+      border-color: #666;
+      box-shadow: 0 0 0 2px rgba(102, 102, 102, 0.1);
+    }
+    
     .btn {
       display: flex;
       align-items: center;
@@ -165,6 +198,69 @@
       min-height: 400px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      position: relative;
+    }
+    
+    /* 透かしロゴのスタイル - おひさま農園ロゴ */
+    .document-content::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      width: 300px;
+      height: 200px;
+      background-image: url('assets/images/ohisama-logo.jpg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* 透かしロゴ - DRAFTバージョン */
+    .document-content.draft-watermark::before {
+      content: '';
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><text x="100" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="24" font-weight="300" fill="%23e0e0e0">DRAFT</text></svg>');
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      opacity: 0.1;
+    }
+    
+    /* 透かしロゴ - 機密文書バージョン */
+    .document-content.confidential-watermark::before {
+      content: '';
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250"><circle cx="125" cy="125" r="120" fill="none" stroke="%23e0e0e0" stroke-width="2"/><text x="125" y="115" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="500" fill="%23e0e0e0">機密文書</text><text x="125" y="140" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="300" fill="%23e0e0e0">CONFIDENTIAL</text></svg>');
+      width: 250px;
+      height: 250px;
+      transform: translate(-50%, -50%) rotate(-20deg);
+    }
+    
+    /* 透かしロゴ - 複数配置バージョン */
+    .document-content.multi-watermark::before {
+      content: '';
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150"><text x="75" y="75" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="300" fill="%23e0e0e0">SAMPLE</text></svg>');
+      background-size: 150px 150px;
+      background-repeat: repeat;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform: none;
+      opacity: 0.05;
+    }
+    
+    /* 透かしなしオプション */
+    .document-content.no-watermark::before {
+      display: none;
+    }
+    
+    /* コンテンツが透かしの上に表示されるように */
+    .document-content > * {
+      position: relative;
+      z-index: 2;
     }
     
     .welcome-message {
@@ -380,6 +476,22 @@
         min-height: auto;
         line-height: 1.6;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+        position: relative;
+      }
+      
+      /* 印刷時の透かし表示 */
+      .document-content::before {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .document-content.draft-watermark::before,
+      .document-content.confidential-watermark::before,
+      .document-content.multi-watermark::before {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
       
       .document-content h1 {
@@ -586,6 +698,18 @@
         <span>🗑️</span>
         クリア
       </button>
+    </div>
+    
+    <!-- Watermark Controls -->
+    <div class="watermark-controls">
+      <label for="watermark-select">透かし設定:</label>
+      <select id="watermark-select" onchange="changeWatermark()">
+        <option value="logo">おひさま農園ロゴ</option>
+        <option value="draft">DRAFT</option>
+        <option value="confidential">機密文書</option>
+        <option value="multi">複数配置</option>
+        <option value="none">なし</option>
+      </select>
     </div>
   </div>
 
@@ -936,6 +1060,34 @@ ${content}
       }
     }
     
+    // 透かし変更機能
+    function changeWatermark() {
+      const select = document.getElementById('watermark-select');
+      const documentContent = document.getElementById('documentContent');
+      
+      // 既存のクラスを削除
+      documentContent.classList.remove('draft-watermark', 'confidential-watermark', 'multi-watermark', 'no-watermark');
+      
+      // 選択された透かしに応じてクラスを追加
+      switch(select.value) {
+        case 'logo':
+          // デフォルトのロゴ透かし（クラスなし）
+          break;
+        case 'draft':
+          documentContent.classList.add('draft-watermark');
+          break;
+        case 'confidential':
+          documentContent.classList.add('confidential-watermark');
+          break;
+        case 'multi':
+          documentContent.classList.add('multi-watermark');
+          break;
+        case 'none':
+          documentContent.classList.add('no-watermark');
+          break;
+      }
+    }
+
     // アプリケーション開始
     document.addEventListener('DOMContentLoaded', () => {
       new MarkdownApp();
