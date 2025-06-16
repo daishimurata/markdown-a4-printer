@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markdown A4 Printer - ポータブル版</title>
+  <title>Markdown A4 Printer - スタイリッシュ版</title>
   <style>
     /* Tech-Style Grayscale Document */
     * { 
@@ -26,17 +26,17 @@
     
     .control-panel {
       background: white;
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 24px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       height: fit-content;
     }
     
     .app-title {
-      font-size: 24px;
+      font-size: 18pt;
       font-weight: 400;
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 6pt;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -48,41 +48,41 @@
     .app-subtitle {
       text-align: center;
       color: #666;
-      font-size: 14px;
-      margin-bottom: 32px;
+      font-size: 9pt;
+      margin-bottom: 28pt;
       font-weight: 400;
     }
     
     .file-input-section {
-      margin-bottom: 24px;
+      margin-bottom: 20pt;
     }
     
     .file-input-label {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 12px 16px;
-      background: #f8f8f8;
+      padding: 12pt 16pt;
+      background: white;
       border: 1px solid #e0e0e0;
-      border-radius: 8px;
+      border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s;
       font-weight: 500;
-      margin-bottom: 16px;
+      margin-bottom: 12pt;
       color: #333;
+      font-size: 10pt;
     }
     
     .file-input-label:hover {
-      background: #f0f0f0;
-      border-color: #ccc;
+      border-color: #333;
     }
     
     .file-input { display: none; }
     
     .file-drop-zone {
-      border: 2px dashed #e0e0e0;
-      border-radius: 8px;
-      padding: 32px 16px;
+      border: 1px dashed #e0e0e0;
+      border-radius: 4px;
+      padding: 24pt 16pt;
       text-align: center;
       transition: all 0.2s;
       cursor: pointer;
@@ -90,34 +90,34 @@
     
     .file-drop-zone.drag-over {
       border-color: #333;
-      background: #f8f8f8;
+      background: #fafafa;
     }
     
     .drop-zone-text {
       color: #666;
-      font-size: 14px;
+      font-size: 9pt;
       font-weight: 400;
     }
     
     .button-group {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10pt;
     }
     
     .btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 12px 16px;
+      gap: 6pt;
+      padding: 12pt 16pt;
       border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 4px;
+      font-size: 10pt;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
-      background: none;
+      background: white;
       color: #333;
     }
     
@@ -137,18 +137,18 @@
     }
     
     .btn-secondary {
-      background: #f8f8f8;
+      background: white;
       color: #333;
     }
     
     .btn-secondary:hover:not(:disabled) {
-      background: #f0f0f0;
+      border-color: #333;
     }
     
     .document-container {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       overflow: hidden;
       max-width: 210mm;
       margin: 0 auto;
@@ -169,24 +169,18 @@
     
     .welcome-message {
       text-align: center;
-      padding: 48px 24px;
+      padding: 40pt 20pt;
       color: #666;
     }
     
     .welcome-message h2 {
       color: #000;
-      margin-bottom: 16px;
+      margin-bottom: 14pt;
       font-weight: 400;
+      font-size: 14pt;
     }
     
-    /* Document Styles */
-    .document-content h1, .document-content h2, .document-content h3,
-    .document-content h4, .document-content h5, .document-content h6 {
-      color: #000;
-      font-weight: 400;
-      line-height: 1.4;
-    }
-    
+    /* Document Typography Styles */
     .document-content h1 {
       font-size: 18pt;
       font-weight: 400;
@@ -204,48 +198,6 @@
       margin-bottom: 14pt;
       padding-bottom: 6pt;
       border-bottom: 1px solid #e0e0e0;
-    }
-    
-    /* h2の直後のコンテンツをまとめてスタイリング */
-    .document-content h2 + * {
-      margin-top: 0;
-    }
-    
-    /* セクション全体の背景スタイル */
-    .document-content .section-content {
-      background: #fafafa;
-      padding: 20pt;
-      border-radius: 0;
-      margin: 16pt 0;
-      border: 1px solid #e0e0e0;
-      box-shadow: none;
-      position: relative;
-    }
-    
-    .document-content .section-content::before {
-      display: none;
-    }
-    
-    .document-content .section-content p,
-    .document-content .section-content ul,
-    .document-content .section-content ol,
-    .document-content .section-content table {
-      margin-top: 12pt;
-      margin-bottom: 12pt;
-    }
-    
-    .document-content .section-content p:first-child,
-    .document-content .section-content ul:first-child,
-    .document-content .section-content ol:first-child,
-    .document-content .section-content table:first-child {
-      margin-top: 0;
-    }
-    
-    .document-content .section-content p:last-child,
-    .document-content .section-content ul:last-child,
-    .document-content .section-content ol:last-child,
-    .document-content .section-content table:last-child {
-      margin-bottom: 0;
     }
     
     .document-content h3 { 
@@ -282,18 +234,18 @@
 
     .document-content code {
       background: #f8f8f8;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 2pt 6pt;
+      border-radius: 2pt;
       font-family: 'Courier New', monospace;
-      font-size: 0.875em;
+      font-size: 9pt;
     }
 
     .document-content pre {
       background: #f8f8f8;
-      padding: 16px;
-      border-radius: 8px;
+      padding: 16pt;
+      border-radius: 4pt;
       overflow-x: auto;
-      margin: 16px 0;
+      margin: 16pt 0;
     }
 
     .document-content pre code {
@@ -327,24 +279,12 @@
       background: #fafafa;
     }
 
-    /* テーブル列幅の自動調整 */
-    .document-content table.auto-layout {
-      table-layout: auto;
-    }
-
-    /* 小さなテーブル用の列幅指定 */
-    .document-content table.small-table th,
-    .document-content table.small-table td {
-      min-width: 80px;
-    }
-
-    /* 2列テーブル */
+    /* テーブル列幅の調整 */
     .document-content table.two-col th:first-child,
     .document-content table.two-col td:first-child {
       width: 30%;
     }
 
-    /* 3列テーブル */
     .document-content table.three-col th:first-child,
     .document-content table.three-col td:first-child {
       width: 25%;
@@ -355,13 +295,11 @@
       width: 35%;
     }
 
-    /* 4列テーブル */
     .document-content table.four-col th,
     .document-content table.four-col td {
       width: 25%;
     }
 
-    /* 5列テーブル以上 */
     .document-content table.five-col th,
     .document-content table.five-col td {
       width: 20%;
@@ -389,6 +327,22 @@
       font-style: italic;
     }
 
+    /* 特別なセクション（最小限の背景使用） */
+    .document-content .intention-text {
+      margin: 16pt 0;
+      padding: 16pt 0;
+      border-left: 2px solid #333;
+      padding-left: 16pt;
+    }
+    
+    .document-content .support-policy {
+      margin: 20pt 0;
+      padding: 20pt 0;
+      line-height: 1.7;
+      border-top: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
     /* Print Styles */
     @media print {
       * {
@@ -405,9 +359,6 @@
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 9pt;
         line-height: 1.6;
-        zoom: 1;
-        -webkit-transform: scale(1);
-        transform: scale(1);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -444,9 +395,9 @@
         font-size: 12pt;
         font-weight: 500 !important;
         color: #000 !important;
-        margin-top: 28pt !important;
-        margin-bottom: 14pt !important;
-        padding-bottom: 6pt !important;
+        margin-top: 20pt !important;
+        margin-bottom: 10pt !important;
+        padding-bottom: 4pt !important;
         border-bottom: 1px solid #e0e0e0 !important;
         page-break-after: avoid;
       }
@@ -455,38 +406,38 @@
         font-size: 11pt !important;
         font-weight: 500 !important;
         color: #333 !important;
-        margin-top: 18pt !important;
-        margin-bottom: 10pt !important;
+        margin-top: 14pt !important;
+        margin-bottom: 8pt !important;
       }
       
       .document-content h4 {
         font-size: 10pt !important;
         font-weight: 600 !important;
         color: #333 !important;
-        margin-top: 14pt !important;
+        margin-top: 12pt !important;
         margin-bottom: 6pt !important;
       }
       
       .document-content p {
-        margin-bottom: 8pt !important;
+        margin-bottom: 6pt !important;
         color: #333 !important;
         line-height: 1.6 !important;
       }
       
       .document-content ul, .document-content ol {
-        margin: 12pt 0 !important;
-        padding-left: 20pt !important;
+        margin: 8pt 0 !important;
+        padding-left: 16pt !important;
       }
       
       .document-content li {
-        margin-bottom: 6pt !important;
+        margin-bottom: 4pt !important;
         line-height: 1.5 !important;
       }
       
       .document-content table {
         width: 100% !important;
         border-collapse: collapse !important;
-        margin: 12pt 0 !important;
+        margin: 10pt 0 !important;
         font-size: 8pt !important;
         background: #fff !important;
         page-break-inside: avoid;
@@ -510,24 +461,10 @@
         background: #fafafa !important;
       }
       
-      .document-content .section-content {
-        background: #fafafa !important;
-        padding: 16pt !important;
-        border-radius: 0 !important;
-        margin: 12pt 0 !important;
-        border: 1px solid #e0e0e0 !important;
-        box-shadow: none !important;
-        page-break-inside: avoid;
-      }
-      
-      .document-content .section-content::before {
-        display: none !important;
-      }
-      
       .document-content code {
         background: #f8f8f8 !important;
         padding: 1pt 3pt !important;
-        border-radius: 2pt !important;
+        border-radius: 1pt !important;
         font-family: 'Courier New', monospace;
         font-size: 8pt !important;
       }
@@ -535,7 +472,7 @@
       .document-content pre {
         background: #f8f8f8 !important;
         padding: 8pt !important;
-        border-radius: 3pt !important;
+        border-radius: 2pt !important;
         overflow-x: auto;
         margin: 8pt 0 !important;
         page-break-inside: avoid;
@@ -572,12 +509,28 @@
         font-style: italic;
       }
       
+      .document-content .intention-text {
+        margin: 12pt 0 !important;
+        padding: 12pt 0 !important;
+        border-left: 2px solid #333 !important;
+        padding-left: 12pt !important;
+        page-break-inside: avoid;
+      }
+      
+      .document-content .support-policy {
+        margin: 16pt 0 !important;
+        padding: 16pt 0 !important;
+        line-height: 1.7 !important;
+        border-top: 1px solid #e0e0e0 !important;
+        border-bottom: 1px solid #e0e0e0 !important;
+        page-break-inside: avoid;
+      }
+      
       /* 背景色を強制的に表示 */
       .document-content th,
       .document-content tr:nth-child(even),
       .document-content code,
-      .document-content pre,
-      .document-content .section-content {
+      .document-content pre {
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -604,7 +557,7 @@
       <span>📄</span>
       Markdown A4 Printer
     </h1>
-    <p class="app-subtitle">ポータブル版 - どこでも使える</p>
+    <p class="app-subtitle">スタイリッシュ版 - グレースケールデザイン</p>
 
     <!-- File Input Section -->
     <div class="file-input-section">
@@ -614,7 +567,7 @@
         <input type="file" id="fileInput" accept=".md,.markdown,.txt" class="file-input" />
       </label>
       <div class="file-drop-zone" id="fileDropZone">
-        <span style="font-size: 24px;">⬇️</span>
+        <span style="font-size: 20pt;">⬇️</span>
         <p class="drop-zone-text">または.mdファイルをここにドラッグ&ドロップ</p>
       </div>
     </div>
@@ -640,9 +593,9 @@
   <div class="document-container">
     <div class="document-content" id="documentContent">
       <div class="welcome-message">
-        <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+        <div style="font-size: 32pt; margin-bottom: 14pt;">📝</div>
         <h2>Markdown A4 Printer へようこそ</h2>
-        <p>Markdownファイルを読み込んで、美しいA4印刷用HTMLに変換します。</p>
+        <p>Markdownファイルを美しいA4印刷用HTMLに変換します。</p>
         <p><strong>使い方:</strong> 左側のパネルからファイルを選択するか、ドラッグ&ドロップしてください。</p>
       </div>
     </div>
@@ -675,7 +628,7 @@
           return `__INLINE_CODE_${index}__`;
         });
         
-        // 水平線を最優先で処理（複数パターンに対応）
+        // 水平線
         html = html.replace(/^(\s*)---+(\s*)$/gm, '\n<hr>\n');
         html = html.replace(/^(\s*)\*\*\*+(\s*)$/gm, '\n<hr>\n');
         html = html.replace(/^(\s*)___+(\s*)$/gm, '\n<hr>\n');
@@ -698,25 +651,21 @@
           return `<ul>${match}</ul>`;
         });
         
-        // テーブル（改善されたパターンマッチング）
+        // テーブル処理
         html = html.replace(/(\|[^|\n]+(?:\|[^|\n]*)*\|)\s*\n\s*(\|[-:\s|]+\|)\s*\n((?:\|[^|\n]*(?:\|[^|\n]*)*\|\s*\n?)*)/g, (match, header, separator, rows) => {
           try {
-            // ヘッダー行の処理（先頭と末尾の | を除去）
             const headerParts = header.replace(/^\||\|$/g, '').split('|').map(cell => cell.trim());
             const headerCells = headerParts.map(cell => `<th>${cell}</th>`).join('');
             
-            // データ行の処理
             const dataRows = rows.trim().split('\n').filter(row => row.trim() !== '');
             const bodyRows = dataRows.map(row => {
               const cells = row.replace(/^\||\|$/g, '').split('|').map(cell => cell.trim());
-              // ヘッダーと同じ列数になるように調整
               while (cells.length < headerParts.length) {
                 cells.push('');
               }
               return `<tr>${cells.slice(0, headerParts.length).map(cell => `<td>${cell}</td>`).join('')}</tr>`;
             }).join('');
             
-            // 列数に応じてクラスを決定
             const columnCount = headerParts.length;
             let tableClass = '';
             if (columnCount === 2) tableClass = 'two-col';
@@ -724,34 +673,28 @@
             else if (columnCount === 4) tableClass = 'four-col';
             else if (columnCount >= 5) tableClass = 'five-col';
             
-            console.log('Table processed:', {columnCount, headerParts, match: match.substring(0, 100)});
             return `<table class="${tableClass}"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
           } catch (e) {
-            console.warn('Table parsing error:', e, match);
-            return match; // エラー時は元のテキストを返す
+            return match;
           }
         });
-
         
         // 引用
         html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
         
-        // 段落処理を改善
+        // 段落処理
         html = html.split(/\n\s*\n/).map(paragraph => {
           paragraph = paragraph.trim();
           if (!paragraph) return '';
           
-          // 既にHTMLタグが含まれている場合はそのまま返す
           if (paragraph.includes('<')) {
             return paragraph;
           }
           
-          // 水平線の最終チェック
           if (paragraph.match(/^---+$/) || paragraph.match(/^\*\*\*+$/) || paragraph.match(/^___+$/)) {
             return '<hr>';
           }
           
-          // 通常の段落として処理
           return `<p>${paragraph.replace(/\n/g, '<br>')}</p>`;
         }).join('\n');
         
@@ -881,74 +824,28 @@
       renderDocument(html) {
         const content = document.getElementById('documentContent');
         content.innerHTML = html;
-        
-        // テーブルの後処理
-        this.improveTableLayout();
-        
-        // セクション背景の後処理
-        this.addSectionBackgrounds();
+        this.addSpecialStyling();
       }
       
-      improveTableLayout() {
-        const tables = document.querySelectorAll('#documentContent table');
-        tables.forEach(table => {
-          // 既にクラスが設定されていない場合、列数に応じてクラスを設定
-          if (!table.className) {
-            const firstRow = table.querySelector('tr');
-            if (firstRow) {
-              const columnCount = firstRow.children.length;
-              if (columnCount === 2) table.className = 'two-col';
-              else if (columnCount === 3) table.className = 'three-col';
-              else if (columnCount === 4) table.className = 'four-col';
-              else if (columnCount >= 5) table.className = 'five-col';
-            }
-          }
-          
-          // 長いテキストがある場合は自動レイアウトに切り替え
-          const cells = table.querySelectorAll('td, th');
-          let hasLongText = false;
-          cells.forEach(cell => {
-            if (cell.textContent.length > 15) {
-              hasLongText = true;
-            }
-          });
-          
-          if (hasLongText) {
-            table.classList.add('auto-layout');
-          }
-        });
-      }
-      
-      addSectionBackgrounds() {
+      addSpecialStyling() {
         const content = document.getElementById('documentContent');
         const h2Elements = content.querySelectorAll('h2');
         
         h2Elements.forEach(h2 => {
           const sectionText = h2.textContent.trim();
           
-          // セクション2と3のみ処理
-          if (sectionText.match(/^[23]\./) || sectionText.includes('利用者及び家族の生活に対する意向') || sectionText.includes('総合的な支援の方針')) {
-            // h2の次の要素から次のh1/h2までの要素を収集
-            const sectionElements = [];
-            let nextElement = h2.nextElementSibling;
-            
-            while (nextElement && !nextElement.matches('h1, h2')) {
-              sectionElements.push(nextElement);
-              nextElement = nextElement.nextElementSibling;
+          // 特定のセクションに特別なスタイリングを適用
+          if (sectionText.includes('利用者及び家族の生活に対する意向')) {
+            const nextElement = h2.nextElementSibling;
+            if (nextElement) {
+              nextElement.classList.add('intention-text');
             }
-            
-            // セクションコンテンツを包むdivを作成
-            if (sectionElements.length > 0) {
-              const sectionDiv = document.createElement('div');
-              sectionDiv.className = 'section-content';
-              
-              // 要素をsectionDivに移動
-              sectionElements.forEach(element => {
-                sectionDiv.appendChild(element);
-              });
-              
-              // h2の後にsectionDivを挿入
-              h2.parentNode.insertBefore(sectionDiv, h2.nextSibling);
+          }
+          
+          if (sectionText.includes('総合的な支援の方針')) {
+            const nextElement = h2.nextElementSibling;
+            if (nextElement) {
+              nextElement.classList.add('support-policy');
             }
           }
         });
@@ -963,9 +860,9 @@
         const content = document.getElementById('documentContent');
         content.innerHTML = `
           <div class="welcome-message">
-            <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+            <div style="font-size: 32pt; margin-bottom: 14pt;">📝</div>
             <h2>Markdown A4 Printer へようこそ</h2>
-            <p>Markdownファイルを読み込んで、美しいA4印刷用HTMLに変換します。</p>
+            <p>Markdownファイルを美しいA4印刷用HTMLに変換します。</p>
             <p><strong>使い方:</strong> 左側のパネルからファイルを選択するか、ドラッグ&ドロップしてください。</p>
           </div>
         `;
@@ -984,35 +881,41 @@
   <title>Markdown Document</title>
   <style>
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+      font-size: 10pt;
       line-height: 1.6; 
-      max-width: 800px; 
+      max-width: 210mm; 
       margin: 0 auto; 
-      padding: 40px 20px; 
+      padding: 22mm; 
       color: #333;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    h1, h2, h3, h4, h5, h6 { color: #000; font-weight: 600; margin-top: 32px; margin-bottom: 16px; }
-    h1 { font-size: 2.25rem; border-bottom: 2px solid #eee; padding-bottom: 8px; }
-    h2 { font-size: 1.875rem; }
-    h3 { font-size: 1.5rem; }
-    p { margin-bottom: 16px; }
-    ul, ol { margin: 16px 0; padding-left: 24px; }
-    li { margin-bottom: 8px; }
-    table { border-collapse: collapse; width: 100%; margin: 16px 0; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-    th { background-color: #f5f5f5; font-weight: 600; }
-    tr:nth-child(even) { background-color: #fafafa; }
-    code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
-    pre { background-color: #f4f4f4; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 16px 0; }
+    h1 { font-size: 18pt; font-weight: 400; color: #000; text-align: center; margin-bottom: 6pt; letter-spacing: -0.3pt; }
+    h2 { font-size: 14pt; font-weight: 500; color: #000; margin-top: 28pt; margin-bottom: 14pt; padding-bottom: 6pt; border-bottom: 1px solid #e0e0e0; }
+    h3 { font-size: 12pt; font-weight: 500; color: #333; margin-top: 18pt; margin-bottom: 10pt; }
+    h4 { font-size: 10pt; font-weight: 600; color: #333; margin-top: 14pt; margin-bottom: 6pt; }
+    p { margin-bottom: 8pt; }
+    ul, ol { margin: 12pt 0; padding-left: 20pt; }
+    li { margin-bottom: 6pt; line-height: 1.5; }
+    table { border-collapse: collapse; width: 100%; margin: 16pt 0; font-size: 9pt; }
+    th, td { border: 1px solid #e0e0e0; padding: 10pt 14pt; text-align: left; vertical-align: top; }
+    th { background: #f8f8f8; font-weight: 600; color: #000; }
+    tr:nth-child(even) { background: #fafafa; }
+    code { background: #f8f8f8; padding: 2pt 6pt; border-radius: 2pt; font-family: 'Courier New', monospace; font-size: 9pt; }
+    pre { background: #f8f8f8; padding: 16pt; border-radius: 4pt; overflow-x: auto; margin: 16pt 0; }
     pre code { background: none; padding: 0; }
-    blockquote { border-left: 4px solid #ddd; margin: 16px 0; padding: 0 16px; color: #666; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 32px 0; }
-    strong { font-weight: 600; }
+    blockquote { border-left: 2px solid #333; margin: 16pt 0; padding: 0 16pt; color: #666; }
+    hr { border: none; border-top: 1px solid #e0e0e0; margin: 20pt 0; }
+    strong { font-weight: 600; color: #000; }
     em { font-style: italic; }
+    .intention-text { border-left: 2px solid #333; padding-left: 16pt; margin: 16pt 0; }
+    .support-policy { border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; padding: 20pt 0; margin: 20pt 0; line-height: 1.7; }
     @media print {
-      body { font-size: 12pt; }
-      h1, h2, h3, h4, h5, h6 { page-break-after: avoid; }
+      body { font-size: 9pt; padding: 12mm; }
+      h1, h2, h3, h4 { page-break-after: avoid; }
       pre, blockquote, table { page-break-inside: avoid; }
+      th, tr:nth-child(even), code, pre { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; print-color-adjust: exact !important; }
     }
   </style>
 </head>

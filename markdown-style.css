@@ -1,0 +1,343 @@
+/* Tech-Style Grayscale Markdown CSS */
+/* Based on Helvetica Neue design system */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Modern Typography - Unified Font Family */
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #333;
+    background: #fff;
+    padding: 22mm;
+    max-width: 210mm;
+    margin: 0 auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header Hierarchy */
+h1 {
+    font-size: 18pt;
+    font-weight: 400;
+    color: #000;
+    text-align: center;
+    margin-bottom: 6pt;
+    letter-spacing: -0.3pt;
+}
+
+h2 {
+    font-size: 14pt;
+    font-weight: 500;
+    color: #000;
+    margin-top: 28pt;
+    margin-bottom: 14pt;
+    padding-bottom: 6pt;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+h3 {
+    font-size: 12pt;
+    font-weight: 500;
+    color: #333;
+    margin-top: 18pt;
+    margin-bottom: 10pt;
+}
+
+h4 {
+    font-size: 10pt;
+    font-weight: 600;
+    color: #333;
+    margin-top: 14pt;
+    margin-bottom: 6pt;
+}
+
+h5, h6 {
+    font-size: 10pt;
+    font-weight: 600;
+    color: #333;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+}
+
+/* Paragraphs */
+p {
+    margin-bottom: 8pt;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Lists */
+ul, ol {
+    margin: 12pt 0;
+    padding-left: 20pt;
+}
+
+li {
+    margin-bottom: 6pt;
+    line-height: 1.5;
+}
+
+/* Tables - Clean & Minimal */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16pt 0;
+    font-size: 9pt;
+    background: #fff;
+}
+
+th, td {
+    border: 1px solid #e0e0e0;
+    padding: 10pt 14pt;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background: #f8f8f8;
+    font-weight: 600;
+    color: #000;
+    font-size: 9pt;
+}
+
+tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Code */
+code {
+    background: #f8f8f8;
+    padding: 2pt 4pt;
+    border-radius: 2pt;
+    font-family: 'Courier New', monospace;
+    font-size: 9pt;
+    color: #333;
+}
+
+pre {
+    background: #f8f8f8;
+    padding: 12pt;
+    border-radius: 4pt;
+    overflow-x: auto;
+    margin: 12pt 0;
+    font-size: 9pt;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 2px solid #333;
+    margin: 16pt 0;
+    padding: 0 16pt;
+    color: #666;
+    font-style: italic;
+}
+
+/* Horizontal Rules */
+hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 20pt 0;
+}
+
+/* Links */
+a {
+    color: #333;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #000;
+}
+
+/* Strong and Emphasis */
+strong {
+    font-weight: 600;
+    color: #000;
+}
+
+em {
+    font-style: italic;
+    color: #333;
+}
+
+/* Special Sections */
+.important-section {
+    border-left: 2px solid #333;
+    padding-left: 16pt;
+    margin: 16pt 0;
+}
+
+.separator-section {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 20pt 0;
+    margin: 20pt 0;
+}
+
+/* Checkbox Styles */
+.checkbox {
+    font-size: 10pt;
+    font-weight: 500;
+}
+
+.checked::before {
+    content: "■ ";
+    color: #000;
+    font-weight: 700;
+}
+
+.unchecked::before {
+    content: "□ ";
+    color: #999;
+    font-weight: 400;
+}
+
+/* Print Optimization */
+@media print {
+    body {
+        padding: 12mm;
+        font-size: 9pt;
+        max-width: none;
+    }
+    
+    h1 {
+        font-size: 16pt;
+        page-break-after: avoid;
+    }
+    
+    h2 {
+        font-size: 12pt;
+        page-break-after: avoid;
+    }
+    
+    h3 {
+        font-size: 11pt;
+        page-break-after: avoid;
+    }
+    
+    h4, h5, h6 {
+        font-size: 10pt;
+        page-break-after: avoid;
+    }
+    
+    p {
+        margin-bottom: 6pt;
+    }
+    
+    ul, ol {
+        margin: 8pt 0;
+        padding-left: 16pt;
+    }
+    
+    li {
+        margin-bottom: 4pt;
+    }
+    
+    table {
+        page-break-inside: avoid;
+        font-size: 8pt;
+        margin: 12pt 0;
+    }
+    
+    th, td {
+        padding: 6pt 10pt;
+    }
+    
+    blockquote {
+        page-break-inside: avoid;
+        margin: 12pt 0;
+        padding: 0 12pt;
+    }
+    
+    pre {
+        page-break-inside: avoid;
+        font-size: 8pt;
+        padding: 8pt;
+        margin: 8pt 0;
+    }
+    
+    code {
+        font-size: 8pt;
+        padding: 1pt 3pt;
+    }
+    
+    /* Force background colors in print */
+    th,
+    tr:nth-child(even),
+    code,
+    pre {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* Utility Classes */
+.center { text-align: center; }
+.bold { font-weight: 600; color: #000; }
+.light { font-weight: 300; }
+.small { font-size: 9pt; }
+.large { font-size: 12pt; }
+.muted { color: #666; }
+
+/* Clean Separators */
+.separator {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 20pt 0;
+    border: none;
+}
+
+/* Grid Layouts for Complex Documents */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+    margin: 20pt 0;
+}
+
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Document Header Styling */
+.document-header {
+    text-align: center;
+    margin-bottom: 36pt;
+    padding: 20pt 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.document-notice {
+    font-size: 9pt;
+    color: #666;
+    font-weight: 400;
+    margin-top: 10pt;
+}
+
+/* Basic Info Tables */
+.basic-info td:first-child {
+    font-weight: 600;
+    background: #f5f5f5;
+    width: 28%;
+    color: #333;
+}
+
+/* Priority Indicators */
+.priority-high { color: #000; font-weight: 700; }
+.priority-medium { color: #333; font-weight: 600; }
+.priority-low { color: #666; font-weight: 400; } 
