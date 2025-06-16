@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown A4 Printer - ポータブル版</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f8f8;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+      min-height: 100vh;
+    }
+    
+    .control-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+    
+    .app-title {
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .app-subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    
+    .file-input-section {
+      margin-bottom: 24px;
+    }
+    
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    
+    .file-input-label:hover {
+      background: #f0f0f0;
+      border-color: #999;
+    }
+    
+    .file-input { display: none; }
+    
+    .file-drop-zone {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 32px 16px;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .file-drop-zone.drag-over {
+      border-color: #000;
+      background: #f0f0f0;
+    }
+    
+    .drop-zone-text {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: none;
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .btn-primary {
+      background: #000;
+      color: white;
+      border-color: #000;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: #333;
+    }
+    
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #000;
+    }
+    
+    .btn-secondary:hover:not(:disabled) {
+      background: #f0f0f0;
+    }
+    
+    .document-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+    
+    .document-content {
+      padding: 40px;
+      min-height: 400px;
+      line-height: 1.6;
+    }
+    
+    .welcome-message {
+      text-align: center;
+      padding: 48px 24px;
+      color: #666;
+    }
+    
+    .welcome-message h2 {
+      color: #000;
+      margin-bottom: 16px;
+    }
+    
+    /* Document Styles */
+    .document-content h1, .document-content h2, .document-content h3,
+    .document-content h4, .document-content h5, .document-content h6 {
+      color: #000;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    
+    .document-content h1 {
+      font-size: 2.25rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 8px;
+    }
+    
+    .document-content h2 { font-size: 1.875rem; }
+    .document-content h3 { font-size: 1.5rem; }
+    .document-content h4 { font-size: 1.25rem; }
+    
+    .document-content p {
+      margin-bottom: 16px;
+      color: #333;
+    }
+    
+    .document-content ul, .document-content ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+    
+    .document-content li {
+      margin-bottom: 8px;
+    }
+    
+    .document-content code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875em;
+    }
+    
+    .document-content pre {
+      background: #f4f4f4;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+    
+    .document-content pre code {
+      background: none;
+      padding: 0;
+    }
+    
+    .document-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      table-layout: fixed;
+      border: 1px solid #ddd;
+    }
+    
+    .document-content th, .document-content td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+      word-wrap: break-word;
+      vertical-align: top;
+    }
+    
+    .document-content th {
+      background: #f5f5f5;
+      font-weight: 600;
+    }
+    
+    .document-content tr:nth-child(even) {
+      background: #fafafa;
+    }
+    
+    /* テーブル列幅の自動調整 */
+    .document-content table.auto-layout {
+      table-layout: auto;
+    }
+    
+    /* 小さなテーブル用の列幅指定 */
+    .document-content table.small-table th,
+    .document-content table.small-table td {
+      min-width: 80px;
+    }
+    
+    /* 2列テーブル */
+    .document-content table.two-col th:first-child,
+    .document-content table.two-col td:first-child {
+      width: 30%;
+    }
+    
+    /* 3列テーブル */
+    .document-content table.three-col th:first-child,
+    .document-content table.three-col td:first-child {
+      width: 25%;
+    }
+    
+    .document-content table.three-col th:nth-child(2),
+    .document-content table.three-col td:nth-child(2) {
+      width: 35%;
+    }
+    
+    /* 4列テーブル */
+    .document-content table.four-col th,
+    .document-content table.four-col td {
+      width: 25%;
+    }
+    
+    /* 5列テーブル以上 */
+    .document-content table.five-col th,
+    .document-content table.five-col td {
+      width: 20%;
+    }
+    
+    .document-content blockquote {
+      border-left: 4px solid #ddd;
+      margin: 16px 0;
+      padding: 0 16px;
+      color: #666;
+    }
+    
+    .document-content hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 32px 0;
+    }
+    
+    .document-content strong {
+      font-weight: 600;
+    }
+    
+    .document-content em {
+      font-style: italic;
+    }
+    
+    /* Print Styles */
+    @media print {
+      body {
+        display: block;
+        padding: 0;
+        margin: 0;
+        background: white;
+        font-size: 14pt; /* 12ptから14ptに変更 - より読みやすく */
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      .control-panel {
+        display: none !important;
+      }
+      
+      .document-container {
+        box-shadow: none;
+        border-radius: 0;
+        max-width: none;
+        width: 100%;
+        background: white;
+      }
+      
+      .document-content {
+        padding: 15mm; /* 20mmから15mmに変更 - より多くのコンテンツを表示 */
+        line-height: 1.6; /* スクリーンと同じ行間を維持 */
+      }
+      
+      /* 見出しのスタイルをスクリーンに近く保つ */
+      .document-content h1 {
+        page-break-after: avoid;
+        font-size: 24pt; /* より大きなフォントサイズを維持 */
+        border-bottom: 2px solid #eee;
+        padding-bottom: 8px;
+        margin-top: 24pt;
+        margin-bottom: 12pt;
+      }
+      
+      .document-content h2 {
+        font-size: 20pt;
+        margin-top: 20pt;
+        margin-bottom: 10pt;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+      
+      .document-content h3 {
+        font-size: 18pt;
+        margin-top: 16pt;
+        margin-bottom: 8pt;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+      
+      .document-content h4 {
+        font-size: 16pt;
+        margin-top: 14pt;
+        margin-bottom: 6pt;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+      
+      .document-content h5, .document-content h6 {
+        font-size: 14pt;
+        margin-top: 12pt;
+        margin-bottom: 6pt;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+      
+      /* パラグラフのスタイルを維持 */
+      .document-content p {
+        margin-bottom: 12pt;
+        color: #333;
+      }
+      
+      /* リストのスタイルを維持 */
+      .document-content ul, .document-content ol {
+        margin: 12pt 0;
+        padding-left: 18pt;
+      }
+      
+      .document-content li {
+        margin-bottom: 6pt;
+      }
+      
+      /* テーブルのスタイルを維持 */
+      .document-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12pt 0;
+        page-break-inside: avoid;
+        border: 1px solid #ddd;
+      }
+      
+      .document-content th, .document-content td {
+        padding: 8pt;
+        text-align: left;
+        border: 1px solid #ddd;
+        word-wrap: break-word;
+        vertical-align: top;
+      }
+      
+      .document-content th {
+        background: #f5f5f5;
+        font-weight: 600;
+      }
+      
+      .document-content tr:nth-child(even) {
+        background: #fafafa;
+      }
+      
+      /* コードブロックのスタイルを維持 */
+      .document-content code {
+        background: #f4f4f4;
+        padding: 1pt 3pt;
+        border-radius: 2pt;
+        font-family: 'Courier New', monospace;
+        font-size: 12pt;
+      }
+      
+      .document-content pre {
+        background: #f4f4f4;
+        padding: 12pt;
+        border-radius: 4pt;
+        overflow-x: auto;
+        margin: 12pt 0;
+        page-break-inside: avoid;
+      }
+      
+      .document-content pre code {
+        background: none;
+        padding: 0;
+      }
+      
+      /* 引用のスタイルを維持 */
+      .document-content blockquote {
+        border-left: 3pt solid #ddd;
+        margin: 12pt 0;
+        padding: 0 12pt;
+        color: #666;
+        page-break-inside: avoid;
+      }
+      
+      /* 水平線のスタイルを維持 */
+      .document-content hr {
+        border: none;
+        border-top: 1pt solid #ddd;
+        margin: 24pt 0;
+      }
+      
+      /* 強調のスタイルを維持 */
+      .document-content strong {
+        font-weight: 600;
+      }
+      
+      .document-content em {
+        font-style: italic;
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+      
+      .control-panel {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Control Panel -->
+  <div class="control-panel">
+    <h1 class="app-title">
+      <span>📄</span>
+      Markdown A4 Printer
+    </h1>
+    <p class="app-subtitle">ポータブル版 - どこでも使える</p>
+
+    <!-- File Input Section -->
+    <div class="file-input-section">
+      <label for="fileInput" class="file-input-label">
+        <span>📁</span>
+        <span>Markdownファイルを選択</span>
+        <input type="file" id="fileInput" accept=".md,.markdown,.txt" class="file-input" />
+      </label>
+      <div class="file-drop-zone" id="fileDropZone">
+        <span style="font-size: 24px;">⬇️</span>
+        <p class="drop-zone-text">または.mdファイルをここにドラッグ&ドロップ</p>
+      </div>
+    </div>
+
+    <!-- Control Buttons -->
+    <div class="button-group">
+      <button id="printBtn" class="btn btn-primary" disabled>
+        <span>🖨️</span>
+        A4印刷
+      </button>
+      <button id="downloadBtn" class="btn btn-secondary" disabled>
+        <span>💾</span>
+        HTMLで保存
+      </button>
+      <button id="clearBtn" class="btn btn-secondary">
+        <span>🗑️</span>
+        クリア
+      </button>
+    </div>
+  </div>
+
+  <!-- Document Container -->
+  <div class="document-container">
+    <div class="document-content" id="documentContent">
+      <div class="welcome-message">
+        <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+        <h2>Markdown A4 Printer へようこそ</h2>
+        <p>Markdownファイルを読み込んで、美しいA4印刷用HTMLに変換します。</p>
+        <p><strong>使い方:</strong> 左側のパネルからファイルを選択するか、ドラッグ&ドロップしてください。</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // シンプルなMarkdownパーサー
+    class SimpleMarkdownParser {
+      convert(markdown) {
+        if (!markdown) return '';
+        
+        let html = markdown;
+        
+        // コードブロックを一時的に保護
+        const codeBlocks = [];
+        html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
+          const index = codeBlocks.length;
+          codeBlocks.push(code.trim());
+          return `__CODE_BLOCK_${index}__`;
+        });
+        
+        // インラインコードを一時的に保護
+        const inlineCodes = [];
+        html = html.replace(/`([^`]+)`/g, (match, code) => {
+          const index = inlineCodes.length;
+          inlineCodes.push(code);
+          return `__INLINE_CODE_${index}__`;
+        });
+        
+        // 見出し
+        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        
+        // 太字・斜体
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // リスト
+        html = html.replace(/^\* (.+)$/gm, '<li>$1</li>');
+        html = html.replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>');
+        
+        // リストをul/olで囲む
+        html = html.replace(/((?:<li>.*<\/li>\s*)+)/g, (match) => {
+          return `<ul>${match}</ul>`;
+        });
+        
+        // テーブル
+        html = html.replace(/\|(.+)\|\s*\n\|[-\s|:]+\|\s*\n((?:\|.+\|\s*\n?)*)/g, (match, header, rows) => {
+          const headerCells = header.split('|').slice(1, -1).map(cell => `<th>${cell.trim()}</th>`).join('');
+          const bodyRows = rows.trim().split('\n').map(row => {
+            const cells = row.split('|').slice(1, -1).map(cell => `<td>${cell.trim()}</td>`).join('');
+            return `<tr>${cells}</tr>`;
+          }).join('');
+          
+          // 列数に応じてクラスを決定
+          const columnCount = header.split('|').slice(1, -1).length;
+          let tableClass = '';
+          if (columnCount === 2) tableClass = 'two-col';
+          else if (columnCount === 3) tableClass = 'three-col';
+          else if (columnCount === 4) tableClass = 'four-col';
+          else if (columnCount >= 5) tableClass = 'five-col';
+          
+          return `<table class="${tableClass}"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+        });
+        
+        // 引用
+        html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+        
+        // 水平線
+        html = html.replace(/^---$/gm, '<hr>');
+        
+        // 段落
+        html = html.split('\n\n').map(paragraph => {
+          paragraph = paragraph.trim();
+          if (!paragraph) return '';
+          if (paragraph.startsWith('<h') || paragraph.startsWith('<ul') || 
+              paragraph.startsWith('<table') || paragraph.startsWith('<blockquote') ||
+              paragraph.startsWith('<hr') || paragraph.startsWith('<pre')) {
+            return paragraph;
+          }
+          return `<p>${paragraph.replace(/\n/g, '<br>')}</p>`;
+        }).join('\n');
+        
+        // コードブロックを復元
+        codeBlocks.forEach((code, index) => {
+          html = html.replace(`__CODE_BLOCK_${index}__`, `<pre><code>${this.escapeHtml(code)}</code></pre>`);
+        });
+        
+        // インラインコードを復元
+        inlineCodes.forEach((code, index) => {
+          html = html.replace(`__INLINE_CODE_${index}__`, `<code>${this.escapeHtml(code)}</code>`);
+        });
+        
+        return html;
+      }
+      
+      escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+    }
+    
+    // メインアプリケーション
+    class MarkdownApp {
+      constructor() {
+        this.parser = new SimpleMarkdownParser();
+        this.init();
+      }
+      
+      init() {
+        this.bindEvents();
+      }
+      
+      bindEvents() {
+        const fileInput = document.getElementById('fileInput');
+        const fileDropZone = document.getElementById('fileDropZone');
+        const printBtn = document.getElementById('printBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        
+        // ファイル選択
+        fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+        
+        // ドラッグ&ドロップ
+        fileDropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          fileDropZone.classList.add('drag-over');
+        });
+        
+        fileDropZone.addEventListener('dragleave', () => {
+          fileDropZone.classList.remove('drag-over');
+        });
+        
+        fileDropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          fileDropZone.classList.remove('drag-over');
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            this.loadFile(files[0]);
+          }
+        });
+        
+        fileDropZone.addEventListener('click', () => {
+          fileInput.click();
+        });
+        
+        // ボタン
+        printBtn.addEventListener('click', () => {
+          window.print();
+        });
+        
+        downloadBtn.addEventListener('click', () => {
+          this.downloadHtml();
+        });
+        
+        clearBtn.addEventListener('click', () => {
+          this.clearDocument();
+        });
+        
+        // キーボードショートカット
+        document.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            if (!printBtn.disabled) {
+              window.print();
+            }
+          }
+        });
+      }
+      
+      handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+          this.loadFile(file);
+        }
+      }
+      
+      async loadFile(file) {
+        try {
+          if (!file.name.match(/\.(md|markdown|txt)$/i)) {
+            alert('Markdownファイル(.md, .markdown, .txt)を選択してください。');
+            return;
+          }
+          
+          const text = await this.readFileAsText(file);
+          const html = this.parser.convert(text);
+          this.renderDocument(html);
+          this.enableButtons();
+        } catch (error) {
+          alert('ファイルの読み込みに失敗しました: ' + error.message);
+        }
+      }
+      
+      readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = () => reject(new Error('ファイル読み込みエラー'));
+          reader.readAsText(file, 'UTF-8');
+        });
+      }
+      
+      renderDocument(html) {
+        const content = document.getElementById('documentContent');
+        content.innerHTML = html;
+        
+        // テーブルの後処理
+        this.improveTableLayout();
+      }
+      
+      improveTableLayout() {
+        const tables = document.querySelectorAll('#documentContent table');
+        tables.forEach(table => {
+          // 既にクラスが設定されていない場合、列数に応じてクラスを設定
+          if (!table.className) {
+            const firstRow = table.querySelector('tr');
+            if (firstRow) {
+              const columnCount = firstRow.children.length;
+              if (columnCount === 2) table.className = 'two-col';
+              else if (columnCount === 3) table.className = 'three-col';
+              else if (columnCount === 4) table.className = 'four-col';
+              else if (columnCount >= 5) table.className = 'five-col';
+            }
+          }
+          
+          // 長いテキストがある場合は自動レイアウトに切り替え
+          const cells = table.querySelectorAll('td, th');
+          let hasLongText = false;
+          cells.forEach(cell => {
+            if (cell.textContent.length > 15) {
+              hasLongText = true;
+            }
+          });
+          
+          if (hasLongText) {
+            table.classList.add('auto-layout');
+          }
+        });
+      }
+      
+      enableButtons() {
+        document.getElementById('printBtn').disabled = false;
+        document.getElementById('downloadBtn').disabled = false;
+      }
+      
+      clearDocument() {
+        const content = document.getElementById('documentContent');
+        content.innerHTML = `
+          <div class="welcome-message">
+            <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+            <h2>Markdown A4 Printer へようこそ</h2>
+            <p>Markdownファイルを読み込んで、美しいA4印刷用HTMLに変換します。</p>
+            <p><strong>使い方:</strong> 左側のパネルからファイルを選択するか、ドラッグ&ドロップしてください。</p>
+          </div>
+        `;
+        document.getElementById('printBtn').disabled = true;
+        document.getElementById('downloadBtn').disabled = true;
+        document.getElementById('fileInput').value = '';
+      }
+      
+      downloadHtml() {
+        const content = document.getElementById('documentContent').innerHTML;
+        const fullHtml = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Document</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      line-height: 1.6; 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 40px 20px; 
+      color: #333;
+    }
+    h1, h2, h3, h4, h5, h6 { color: #000; font-weight: 600; margin-top: 32px; margin-bottom: 16px; }
+    h1 { font-size: 2.25rem; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    h2 { font-size: 1.875rem; }
+    h3 { font-size: 1.5rem; }
+    p { margin-bottom: 16px; }
+    ul, ol { margin: 16px 0; padding-left: 24px; }
+    li { margin-bottom: 8px; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background-color: #f5f5f5; font-weight: 600; }
+    tr:nth-child(even) { background-color: #fafafa; }
+    code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+    pre { background-color: #f4f4f4; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 16px 0; }
+    pre code { background: none; padding: 0; }
+    blockquote { border-left: 4px solid #ddd; margin: 16px 0; padding: 0 16px; color: #666; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 32px 0; }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+    @media print {
+      body { font-size: 12pt; }
+      h1, h2, h3, h4, h5, h6 { page-break-after: avoid; }
+      pre, blockquote, table { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+${content}
+</body>
+</html>`;
+        
+        const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'markdown-document.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    }
+    
+    // アプリケーション開始
+    document.addEventListener('DOMContentLoaded', () => {
+      new MarkdownApp();
+    });
+  </script>
+</body>
+</html> 
