@@ -558,6 +558,14 @@
         
         let html = markdown;
         
+        // 改行を正規化
+        html = html.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        
+        // 水平線の前後に空行を確保（確実に認識させるため）
+        html = html.replace(/\n(---+)\n/g, '\n\n$1\n\n');
+        html = html.replace(/\n(\*\*\*+)\n/g, '\n\n$1\n\n');
+        html = html.replace(/\n(___+)\n/g, '\n\n$1\n\n');
+        
         // コードブロックを一時的に保護
         const codeBlocks = [];
         html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
@@ -614,15 +622,26 @@
         // 引用
         html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
         
-        // 水平線（複数パターンに対応）
-        html = html.replace(/^---+$/gm, '<hr>');
-        html = html.replace(/^\*\*\*+$/gm, '<hr>');
-        html = html.replace(/^___+$/gm, '<hr>');
+        // 水平線（複数パターンに対応）- より厳密にマッチング
+        html = html.replace(/^(\s*)---+(\s*)$/gm, '<hr>');
+        html = html.replace(/^(\s*)\*\*\*+(\s*)$/gm, '<hr>');
+        html = html.replace(/^(\s*)___+(\s*)$/gm, '<hr>');
+        
+        // 段落処理前に水平線を再度処理（念のため）
+        html = html.replace(/^---$/gm, '<hr>');
+        html = html.replace(/^\*\*\*$/gm, '<hr>');
+        html = html.replace(/^___$/gm, '<hr>');
         
         // 段落
         html = html.split('\n\n').map(paragraph => {
           paragraph = paragraph.trim();
           if (!paragraph) return '';
+          
+          // 水平線の追加チェック
+          if (paragraph.match(/^---+$/) || paragraph.match(/^\*\*\*+$/) || paragraph.match(/^___+$/)) {
+            return '<hr>';
+          }
+          
           if (paragraph.startsWith('<h') || paragraph.startsWith('<ul') || 
               paragraph.startsWith('<table') || paragraph.startsWith('<blockquote') ||
               paragraph.startsWith('<hr') || paragraph.startsWith('<pre')) {
