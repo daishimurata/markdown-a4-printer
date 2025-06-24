@@ -758,14 +758,29 @@
         html = html.replace(/^(\s*)\*\*\*+(\s*)$/gm, '\n<hr>\n');
         html = html.replace(/^(\s*)___+(\s*)$/gm, '\n<hr>\n');
         
-        // 見出し
+        // 見出し（長い方から処理して短い方への誤マッチを防ぐ）
+        html = html.replace(/^###### (.*$)/gm, '<h6>$1</h6>');
+        html = html.replace(/^##### (.*$)/gm, '<h5>$1</h5>');
+        html = html.replace(/^#### (.*$)/gm, '<h4>$1</h4>');
         html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
         html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
         html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
         
+        // 署名欄の下線を一時的に保護
+        const signatureLines = [];
+        html = html.replace(/_{5,}/g, (match) => {
+          const index = signatureLines.length;
+          signatureLines.push(match);
+          return `__SIGNATURE_LINE_${index}__`;
+        });
+        
         // 太字・斜体
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // アンダースコアによる強調（通常の場合）
+        html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+        html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
         
         // リスト
         html = html.replace(/^\* (.+)$/gm, '<li>$1</li>');
@@ -834,6 +849,11 @@
         // インラインコードを復元
         inlineCodes.forEach((code, index) => {
           html = html.replace(`__INLINE_CODE_${index}__`, `<code>${this.escapeHtml(code)}</code>`);
+        });
+        
+        // 署名欄を復元
+        signatureLines.forEach((line, index) => {
+          html = html.replace(`__SIGNATURE_LINE_${index}__`, `<span class="signature-line">${line}</span>`);
         });
         
         return html;

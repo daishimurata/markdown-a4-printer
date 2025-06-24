@@ -195,6 +195,17 @@ p strong + br + br + strong {
     margin-bottom: 6pt !important;
 }
 
+/* Signature line styling */
+.signature-line {
+    display: inline-block;
+    border-bottom: 1px solid #333;
+    min-width: 120pt;
+    font-family: 'Courier New', monospace;
+    color: transparent;
+    line-height: 1.2;
+    margin: 0 2pt;
+}
+
 em {
     font-style: italic;
     color: #333;
