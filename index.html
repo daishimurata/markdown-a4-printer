@@ -223,8 +223,8 @@
     .document-content.logo-top-right::before {
       content: '';
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 5px;
+      right: 5px;
       transform: none;
       width: 120px;
       height: 80px;
@@ -495,6 +495,15 @@
         line-height: 1.6;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
         position: relative;
+      }
+      
+      /* 印刷時の右上配置調整 */
+      .document-content.logo-top-right::before {
+        top: 2mm !important;
+        right: 2mm !important;
+        width: 30mm !important;
+        height: 20mm !important;
+        opacity: 0.3 !important;
       }
       
       /* 印刷時の透かし表示 */
@@ -773,7 +782,16 @@
           return `__INLINE_CODE_${index}__`;
         });
         
-        // 水平線
+        // 署名欄の下線を一時的に保護（他の処理より先に実行）
+        const signatureLines = [];
+        html = html.replace(/_{5,}/g, (match) => {
+          const index = signatureLines.length;
+          signatureLines.push(match);
+          console.log(`署名欄保護: ${match} -> __SIGNATURE_LINE_${index}__`);
+          return `__SIGNATURE_LINE_${index}__`;
+        });
+        
+        // 水平線（署名欄を除外）
         html = html.replace(/^(\s*)---+(\s*)$/gm, '\n<hr>\n');
         html = html.replace(/^(\s*)\*\*\*+(\s*)$/gm, '\n<hr>\n');
         html = html.replace(/^(\s*)___+(\s*)$/gm, '\n<hr>\n');
@@ -785,14 +803,6 @@
         html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
         html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
         html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-        
-        // 署名欄の下線を一時的に保護
-        const signatureLines = [];
-        html = html.replace(/_{5,}/g, (match) => {
-          const index = signatureLines.length;
-          signatureLines.push(match);
-          return `__SIGNATURE_LINE_${index}__`;
-        });
         
         // 太字・斜体
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -872,8 +882,18 @@
         });
         
         // 署名欄を復元
+        console.log('署名欄復元開始:', signatureLines.length, '個のアイテム');
         signatureLines.forEach((line, index) => {
-          html = html.replace(`__SIGNATURE_LINE_${index}__`, `<span class="signature-line">${line}</span>`);
+          const placeholder = `__SIGNATURE_LINE_${index}__`;
+          const replacement = `<span class="signature-line">${line}</span>`;
+          console.log(`署名欄復元: ${placeholder} -> ${replacement}`);
+          console.log(`復元前にHTMLに含まれているか:`, html.includes(placeholder));
+          
+          // グローバル置換でより確実に処理
+          const regex = new RegExp(`__SIGNATURE_LINE_${index}__`, 'g');
+          html = html.replace(regex, replacement);
+          
+          console.log(`復元後にHTMLに含まれているか:`, html.includes(placeholder));
         });
         
         return html;
