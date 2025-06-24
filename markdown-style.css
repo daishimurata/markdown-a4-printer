@@ -167,6 +167,25 @@ strong {
     color: #000;
 }
 
+/* Ensure line breaks are properly displayed */
+br {
+    display: block;
+    margin: 6pt 0;
+    line-height: 0;
+}
+
+/* Better spacing for Japanese document patterns */
+p {
+    margin-bottom: 8pt;
+    line-height: 1.6;
+}
+
+/* When a paragraph contains multiple strong elements, ensure proper spacing */
+p strong + br + br + strong {
+    display: block;
+    margin-top: 8pt;
+}
+
 em {
     font-style: italic;
     color: #333;

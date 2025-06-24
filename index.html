@@ -210,7 +210,7 @@
       transform: translate(-50%, -50%) rotate(-15deg);
       width: 300px;
       height: 200px;
-      background-image: url('assets/images/ohisama-logo.jpg');
+      background-image: url('./assets/images/ohisama-logo.jpg'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><text x="150" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="18" font-weight="400" fill="%23e0e0e0">おひさま農園</text></svg>');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
@@ -710,6 +710,7 @@
         <option value="multi">複数配置</option>
         <option value="none">なし</option>
       </select>
+      <div id="watermark-status" style="margin-top: 8px; font-size: 9pt; color: #666;"></div>
     </div>
   </div>
 
@@ -973,6 +974,34 @@
             }
           }
         });
+        
+        // 期間と目標のパターンで強制改行を追加
+        this.fixGoalPeriodLineBreaks();
+      }
+      
+      fixGoalPeriodLineBreaks() {
+        const content = document.getElementById('documentContent');
+        const paragraphs = content.querySelectorAll('p');
+        
+        paragraphs.forEach(p => {
+          let html = p.innerHTML;
+          
+          // **期間：**の前に改行を挿入（目標の後に続く場合）
+          html = html.replace(/(<\/strong>.*?)(<strong>期間：<\/strong>)/g, '$1<br><br>$2');
+          
+          // **目標：**の前に改行を挿入（他のstrongの後に続く場合）  
+          html = html.replace(/(<\/strong>.*?)(<strong>目標：<\/strong>)/g, '$1<br><br>$2');
+          
+          // その他の重要なパターンの前にも改行を挿入
+          html = html.replace(/(<\/strong>.*?)(<strong>支援内容：<\/strong>)/g, '$1<br><br>$2');
+          html = html.replace(/(<\/strong>.*?)(<strong>実施方法：<\/strong>)/g, '$1<br><br>$2');
+          html = html.replace(/(<\/strong>.*?)(<strong>頻度：<\/strong>)/g, '$1<br><br>$2');
+          html = html.replace(/(<\/strong>.*?)(<strong>担当者：<\/strong>)/g, '$1<br><br>$2');
+          
+          if (html !== p.innerHTML) {
+            p.innerHTML = html;
+          }
+        });
       }
       
       enableButtons() {
@@ -1088,9 +1117,78 @@ ${content}
       }
     }
 
+    // 画像読み込み確認機能
+    function checkWatermarkImage() {
+      const img = new Image();
+      const statusDiv = document.getElementById('watermark-status');
+      
+      img.onload = function() {
+        console.log('透かし画像の読み込み成功: ohisama-logo.jpg');
+        if (statusDiv) {
+          statusDiv.textContent = '✅ ロゴ画像読み込み成功';
+          statusDiv.style.color = '#28a745';
+        }
+      };
+      
+      img.onerror = function() {
+        console.warn('透かし画像の読み込み失敗: ohisama-logo.jpg');
+        console.log('フォールバック透かし（テキスト）を使用します');
+        
+        if (statusDiv) {
+          statusDiv.textContent = '⚠️ 画像読み込み失敗 - テキスト透かしを使用';
+          statusDiv.style.color = '#ffc107';
+        }
+        
+        // 画像が読み込めない場合の処理
+        const style = document.createElement('style');
+        style.textContent = `
+          .document-content::before {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><text x="150" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="18" font-weight="400" fill="%23e0e0e0">おひさま農園</text></svg>') !important;
+          }
+        `;
+        document.head.appendChild(style);
+      };
+      
+      if (statusDiv) {
+        statusDiv.textContent = '🔄 ロゴ画像読み込み中...';
+        statusDiv.style.color = '#6c757d';
+      }
+      
+      // 複数のパスを試す
+      const imagePaths = [
+        './assets/images/ohisama-logo.jpg',
+        'assets/images/ohisama-logo.jpg',
+        '/assets/images/ohisama-logo.jpg'
+      ];
+      
+      let currentPathIndex = 0;
+      
+      function tryNextPath() {
+        if (currentPathIndex < imagePaths.length) {
+          img.src = imagePaths[currentPathIndex];
+          currentPathIndex++;
+        }
+      }
+      
+      const originalOnError = img.onerror;
+      img.onerror = function() {
+        if (currentPathIndex < imagePaths.length) {
+          console.log(`パス ${imagePaths[currentPathIndex-1]} で失敗、次のパスを試行中...`);
+          tryNextPath();
+        } else {
+          console.log('すべてのパスで失敗、フォールバックを実行');
+          originalOnError.call(this);
+        }
+      };
+      
+      tryNextPath();
+    }
+
     // アプリケーション開始
     document.addEventListener('DOMContentLoaded', () => {
       new MarkdownApp();
+      // 画像読み込み確認
+      setTimeout(checkWatermarkImage, 1000);
     });
   </script>
 </body>
