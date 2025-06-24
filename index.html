@@ -201,7 +201,7 @@
       position: relative;
     }
     
-    /* 透かしロゴのスタイル - おひさま農園ロゴ */
+    /* 透かしロゴのスタイル - おひさま農園ロゴ（中央、濃め） */
     .document-content::before {
       content: '';
       position: absolute;
@@ -210,11 +210,29 @@
       transform: translate(-50%, -50%) rotate(-15deg);
       width: 300px;
       height: 200px;
-      background-image: url('./assets/images/ohisama-logo.jpg'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><text x="150" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="18" font-weight="400" fill="%23e0e0e0">おひさま農園</text></svg>');
+      background-image: url('./assets/images/ohisama-logo.jpg'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><text x="150" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="18" font-weight="400" fill="%23c0c0c0">おひさま農園</text></svg>');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      opacity: 0.08;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* 透かしロゴ - 右上配置バージョン */
+    .document-content.logo-top-right::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      transform: none;
+      width: 120px;
+      height: 80px;
+      background-image: url('./assets/images/ohisama-logo.jpg'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80"><text x="60" y="40" text-anchor="middle" dominant-baseline="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="%23b0b0b0">おひさま農園</text></svg>');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.25;
       pointer-events: none;
       z-index: 1;
     }
@@ -486,6 +504,7 @@
         print-color-adjust: exact !important;
       }
       
+      .document-content.logo-top-right::before,
       .document-content.draft-watermark::before,
       .document-content.confidential-watermark::before,
       .document-content.multi-watermark::before {
@@ -704,7 +723,8 @@
     <div class="watermark-controls">
       <label for="watermark-select">透かし設定:</label>
       <select id="watermark-select" onchange="changeWatermark()">
-        <option value="logo">おひさま農園ロゴ</option>
+        <option value="logo">おひさま農園ロゴ（中央）</option>
+        <option value="logo-top-right">おひさま農園ロゴ（右上）</option>
         <option value="draft">DRAFT</option>
         <option value="confidential">機密文書</option>
         <option value="multi">複数配置</option>
@@ -1150,12 +1170,15 @@ ${content}
       const documentContent = document.getElementById('documentContent');
       
       // 既存のクラスを削除
-      documentContent.classList.remove('draft-watermark', 'confidential-watermark', 'multi-watermark', 'no-watermark');
+      documentContent.classList.remove('draft-watermark', 'confidential-watermark', 'multi-watermark', 'no-watermark', 'logo-top-right');
       
       // 選択された透かしに応じてクラスを追加
       switch(select.value) {
         case 'logo':
-          // デフォルトのロゴ透かし（クラスなし）
+          // デフォルトのロゴ透かし（中央配置）
+          break;
+        case 'logo-top-right':
+          documentContent.classList.add('logo-top-right');
           break;
         case 'draft':
           documentContent.classList.add('draft-watermark');
