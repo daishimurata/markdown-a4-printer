@@ -1053,6 +1053,17 @@
         // 短期目標の場合も同様に処理
         contentHtml = contentHtml.replace(/<strong>短期目標([①②③④⑤])<\/strong>/gi, '</p><p><strong class="goal-break">短期目標$1</strong>');
         
+        // 署名欄の項目間にも改行を追加
+        contentHtml = contentHtml.replace(/<strong>日付：<\/strong>/gi, '</p><p><strong>日付：</strong>');
+        contentHtml = contentHtml.replace(/<strong>家族署名：<\/strong>/gi, '</p><p><strong>家族署名：</strong>');
+        contentHtml = contentHtml.replace(/<strong>続柄：<\/strong>/gi, '</p><p><strong>続柄：</strong>');
+        
+        // ヘッダー部分の項目間にも改行を追加
+        contentHtml = contentHtml.replace(/<strong>作成年月日：<\/strong>/gi, '</p><p><strong>作成年月日：</strong>');
+        contentHtml = contentHtml.replace(/<strong>計画作成者：<\/strong>/gi, '</p><p><strong>計画作成者：</strong>');
+        contentHtml = contentHtml.replace(/<strong>計画期間：<\/strong>/gi, '</p><p><strong>計画期間：</strong>');
+        contentHtml = contentHtml.replace(/<strong>氏名：<\/strong>/gi, '</p><p><strong>氏名：</strong>');
+        
         // 空の段落を削除
         contentHtml = contentHtml.replace(/<p><\/p>/gi, '');
         contentHtml = contentHtml.replace(/<p>\s*<\/p>/gi, '');
@@ -1078,6 +1089,21 @@
               
               if (html !== p.innerHTML) {
                 console.log('段落を分割しました');
+                p.outerHTML = '<p>' + html + '</p>';
+              }
+            }
+            
+            // 署名欄の項目も同様に処理
+            if (text.includes('本人署名：') && text.includes('日付：')) {
+              console.log(`段落 ${index} に署名項目が同じ行にあります:`, text.substring(0, 100));
+              
+              let html = p.innerHTML;
+              html = html.replace(/(<strong>本人署名：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>日付：<\/strong>)/gi, '$1</p><p>$2');
+              html = html.replace(/(<strong>家族署名：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>日付：<\/strong>)/gi, '$1</p><p>$2');
+              html = html.replace(/(<strong>日付：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>続柄：<\/strong>)/gi, '$1</p><p>$2');
+              
+              if (html !== p.innerHTML) {
+                console.log('署名欄の段落を分割しました');
                 p.outerHTML = '<p>' + html + '</p>';
               }
             }
