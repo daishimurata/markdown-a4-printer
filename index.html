@@ -782,14 +782,7 @@
           return `__INLINE_CODE_${index}__`;
         });
         
-        // 署名欄の下線を一時的に保護（他の処理より先に実行）
-        const signatureLines = [];
-        html = html.replace(/_{5,}/g, (match) => {
-          const index = signatureLines.length;
-          signatureLines.push(match);
-          console.log(`署名欄保護: ${match} -> __SIGNATURE_LINE_${index}__`);
-          return `__SIGNATURE_LINE_${index}__`;
-        });
+        // 署名欄は後で処理（段落処理の影響を避けるため）
         
         // 水平線（署名欄を除外）
         html = html.replace(/^(\s*)---+(\s*)$/gm, '\n<hr>\n');
@@ -881,20 +874,13 @@
           html = html.replace(`__INLINE_CODE_${index}__`, `<code>${this.escapeHtml(code)}</code>`);
         });
         
-        // 署名欄を復元
-        console.log('署名欄復元開始:', signatureLines.length, '個のアイテム');
-        signatureLines.forEach((line, index) => {
-          const placeholder = `__SIGNATURE_LINE_${index}__`;
-          const replacement = `<span class="signature-line">${line}</span>`;
-          console.log(`署名欄復元: ${placeholder} -> ${replacement}`);
-          console.log(`復元前にHTMLに含まれているか:`, html.includes(placeholder));
-          
-          // グローバル置換でより確実に処理
-          const regex = new RegExp(`__SIGNATURE_LINE_${index}__`, 'g');
-          html = html.replace(regex, replacement);
-          
-          console.log(`復元後にHTMLに含まれているか:`, html.includes(placeholder));
+        // 署名欄の処理を最後に実行（段落処理後）
+        console.log('署名欄処理を開始（段落処理後）');
+        html = html.replace(/_{5,}/g, (match) => {
+          console.log(`署名欄を変換: ${match} -> <span class="signature-line">${match}</span>`);
+          return `<span class="signature-line">${match}</span>`;
         });
+        console.log('署名欄処理完了');
         
         return html;
       }
