@@ -981,27 +981,48 @@
       
       fixGoalPeriodLineBreaks() {
         const content = document.getElementById('documentContent');
-        const paragraphs = content.querySelectorAll('p');
         
-        paragraphs.forEach(p => {
-          let html = p.innerHTML;
-          
-          // **期間：**の前に改行を挿入（目標の後に続く場合）
-          html = html.replace(/(<\/strong>.*?)(<strong>期間：<\/strong>)/g, '$1<br><br>$2');
-          
-          // **目標：**の前に改行を挿入（他のstrongの後に続く場合）  
-          html = html.replace(/(<\/strong>.*?)(<strong>目標：<\/strong>)/g, '$1<br><br>$2');
-          
-          // その他の重要なパターンの前にも改行を挿入
-          html = html.replace(/(<\/strong>.*?)(<strong>支援内容：<\/strong>)/g, '$1<br><br>$2');
-          html = html.replace(/(<\/strong>.*?)(<strong>実施方法：<\/strong>)/g, '$1<br><br>$2');
-          html = html.replace(/(<\/strong>.*?)(<strong>頻度：<\/strong>)/g, '$1<br><br>$2');
-          html = html.replace(/(<\/strong>.*?)(<strong>担当者：<\/strong>)/g, '$1<br><br>$2');
-          
-          if (html !== p.innerHTML) {
-            p.innerHTML = html;
-          }
-        });
+        // 全体のHTMLを取得して処理
+        let contentHtml = content.innerHTML;
+        console.log('修正前のHTML（最初の500文字）:', contentHtml.substring(0, 500));
+        
+        // 「期間：」を含むstrongタグにクラスを追加し、前に改行を挿入
+        contentHtml = contentHtml.replace(/<strong>期間：<\/strong>/gi, '</p><p><strong class="period-break">期間：</strong>');
+        
+        // 「目標：」を含むstrongタグにクラスを追加し、前に改行を挿入
+        contentHtml = contentHtml.replace(/<strong>目標：<\/strong>/gi, '</p><p><strong class="goal-break">目標：</strong>');
+        
+        // 短期目標の場合も同様に処理
+        contentHtml = contentHtml.replace(/<strong>短期目標([①②③④⑤])<\/strong>/gi, '</p><p><strong class="goal-break">短期目標$1</strong>');
+        
+        // 空の段落を削除
+        contentHtml = contentHtml.replace(/<p><\/p>/gi, '');
+        contentHtml = contentHtml.replace(/<p>\s*<\/p>/gi, '');
+        
+        console.log('修正後のHTML（最初の500文字）:', contentHtml.substring(0, 500));
+        
+        // 修正したHTMLを適用
+        content.innerHTML = contentHtml;
+        
+        // さらに確実にするため、個別の段落でも処理
+        setTimeout(() => {
+          const paragraphs = content.querySelectorAll('p');
+          paragraphs.forEach((p, index) => {
+            const text = p.textContent;
+            if (text.includes('期間：') && text.includes('目標：')) {
+              console.log(`段落 ${index} に目標と期間が同じ行にあります:`, text.substring(0, 100));
+              
+              // 段落を分割
+              let html = p.innerHTML;
+              html = html.replace(/(<strong>目標：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>期間：<\/strong>)/gi, '$1</p><p>$2');
+              
+              if (html !== p.innerHTML) {
+                console.log('段落を分割しました');
+                p.outerHTML = '<p>' + html + '</p>';
+              }
+            }
+          });
+        }, 100);
       }
       
       enableButtons() {

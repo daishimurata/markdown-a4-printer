@@ -169,9 +169,10 @@ strong {
 
 /* Ensure line breaks are properly displayed */
 br {
-    display: block;
-    margin: 6pt 0;
-    line-height: 0;
+    display: block !important;
+    margin: 6pt 0 !important;
+    line-height: 0 !important;
+    height: 6pt !important;
 }
 
 /* Better spacing for Japanese document patterns */
@@ -184,6 +185,14 @@ p {
 p strong + br + br + strong {
     display: block;
     margin-top: 8pt;
+}
+
+/* Force specific patterns to display as block elements */
+.period-break,
+.goal-break {
+    display: block !important;
+    margin-top: 12pt !important;
+    margin-bottom: 6pt !important;
 }
 
 em {
