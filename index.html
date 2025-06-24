@@ -949,7 +949,10 @@
       renderDocument(html) {
         const content = document.getElementById('documentContent');
         content.innerHTML = html;
+        console.log('=== renderDocument 開始 ===');
+        console.log('HTML内容（最初の200文字）:', html.substring(0, 200));
         this.addSpecialStyling();
+        console.log('=== renderDocument 完了 ===');
       }
       
       addSpecialStyling() {
@@ -976,15 +979,24 @@
         });
         
         // 期間と目標のパターンで強制改行を追加
+        console.log('=== addSpecialStyling内で fixGoalPeriodLineBreaks を呼び出し ===');
         this.fixGoalPeriodLineBreaks();
       }
       
       fixGoalPeriodLineBreaks() {
+        console.log('🔧 fixGoalPeriodLineBreaks メソッドが呼び出されました');
         const content = document.getElementById('documentContent');
+        
+        if (!content) {
+          console.error('❌ documentContent要素が見つかりません');
+          return;
+        }
         
         // 全体のHTMLを取得して処理
         let contentHtml = content.innerHTML;
-        console.log('修正前のHTML（最初の500文字）:', contentHtml.substring(0, 500));
+        console.log('📄 修正前のHTML（最初の500文字）:', contentHtml.substring(0, 500));
+        console.log('🔍 HTMLに「目標：」が含まれているか:', contentHtml.includes('目標：'));
+        console.log('🔍 HTMLに「期間：」が含まれているか:', contentHtml.includes('期間：'));
         
         // 「期間：」を含むstrongタグにクラスを追加し、前に改行を挿入
         contentHtml = contentHtml.replace(/<strong>期間：<\/strong>/gi, '</p><p><strong class="period-break">期間：</strong>');
@@ -999,10 +1011,12 @@
         contentHtml = contentHtml.replace(/<p><\/p>/gi, '');
         contentHtml = contentHtml.replace(/<p>\s*<\/p>/gi, '');
         
-        console.log('修正後のHTML（最初の500文字）:', contentHtml.substring(0, 500));
+        console.log('📝 修正後のHTML（最初の500文字）:', contentHtml.substring(0, 500));
+        console.log('✅ HTMLの修正が完了しました');
         
         // 修正したHTMLを適用
         content.innerHTML = contentHtml;
+        console.log('🔄 修正したHTMLをDOMに適用しました');
         
         // さらに確実にするため、個別の段落でも処理
         setTimeout(() => {
