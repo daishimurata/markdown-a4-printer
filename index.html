@@ -864,32 +864,77 @@
           // 日本語文書での改行処理を改善
           const lines = paragraph.split('\n').map(line => line.trim()).filter(line => line);
           
-          // 単一行の場合
-          if (lines.length === 1) {
-            return `<p>${lines[0]}</p>`;
-          }
-          
           // 複数行の場合 - 日本語の自然な改行を考慮
           let processedContent = lines.join(' ');
           
-          // Step 1: コロンで区切られた項目を検出して改行
+          // デバッグ: 処理前の内容を確認
+          if (processedContent.length > 100) {
+            console.log('🔍 長い段落を処理中:', processedContent.substring(0, 100) + '...');
+            console.log('🔍 コロンの数:', (processedContent.match(/：/g) || []).length);
+            console.log('🔍 中点の数:', (processedContent.match(/・/g) || []).length);
+          }
+          
+          // 単一行でも長い場合は処理対象とする
+          const needsProcessing = processedContent.length > 50 || 
+                                 (processedContent.match(/：/g) || []).length > 1 ||
+                                 (processedContent.match(/・/g) || []).length > 2;
+          
+          if (!needsProcessing && lines.length === 1) {
+            return `<p>${processedContent}</p>`;
+          }
+          
+          // Step 1: コロンで区切られた項目を検出して改行（より強力に）
           const colonPatterns = [
-            /([^：。！？]+：)([^：。！？]{20,}?)([・\s]*[^：。！？]+：)/g,  // 長い項目の後に次の項目
-            /([。！？])\s*([^：。！？]{2,20}：)/g,                    // 句点の後の項目名
-            /(です|ます|した|する)。?\s*([^：。！？]{2,20}：)/g,        // 動詞の後の項目名
+            // 項目名：説明・項目名： のパターンを検出
+            /([^：。！？]{2,30}：[^：]{10,50}?)・([^：。！？]{2,30}：)/g,
+            // 見直し・○○： のパターン
+            /(見直し|指導|対応|検討|策定|習得|支援)・([^：。！？]{2,30}：)/g,
+            // 長い説明の後の・項目名：パターン
+            /([^・]{20,})・([^：。！？]{2,30}：)/g,
+            // 句点の後の項目名
+            /([。！？])\s*([^：。！？]{2,20}：)/g,
+            // 動詞の後の項目名  
+            /(です|ます|した|する)。?\s*([^：。！？]{2,20}：)/g,
           ];
           
           colonPatterns.forEach(pattern => {
-            processedContent = processedContent.replace(pattern, (match, ...groups) => {
-              if (groups.length === 3) {
-                // 3つのグループがある場合（長い項目パターン）
-                return `${groups[0]}<br>${groups[1]}<br><strong>${groups[2]}</strong>`;
-              } else if (groups.length === 2) {
-                // 2つのグループがある場合
-                return `${groups[0]}<br><strong>${groups[1]}</strong>`;
+            processedContent = processedContent.replace(pattern, (match, group1, group2) => {
+              // ・で区切られた項目の場合
+              if (group1.includes('・') || match.includes('・')) {
+                return `${group1}<br><strong>${group2}</strong>`;
               }
-              return match;
+              // 通常の項目区切り
+              return `${group1}<br><strong>${group2}</strong>`;
             });
+          });
+          
+          // Step 1.5: 特に長い項目リストの強制分割
+          const longListPattern = /([^：]{2,30}：[^：]{15,})・([^：]{2,30}：)/g;
+          let iterations = 0;
+          while (longListPattern.test(processedContent) && iterations < 10) {
+            processedContent = processedContent.replace(longListPattern, '$1<br><strong>$2</strong>');
+            iterations++;
+          }
+          
+          // Step 1.6: 中点（・）で区切られた長いリストの確実な分割
+          // 「項目：説明・項目：説明・項目：説明」パターンを全て分割
+          const bulletSeparatedPattern = /・([^：・]{2,30}：)/g;
+          processedContent = processedContent.replace(bulletSeparatedPattern, '<br><strong>$1</strong>');
+          
+          // Step 1.7: 残った長い文章でコロンが含まれる部分の分割
+          const remainingColonPattern = /([^<>\n]{50,})([^：]{2,30}：)/g;
+          processedContent = processedContent.replace(remainingColonPattern, (match, longText, colonItem) => {
+            // 長いテキストの中で最後の適切な区切り点を見つける
+            const lastPeriod = longText.lastIndexOf('。');
+            const lastBullet = longText.lastIndexOf('・');
+            const breakPoint = Math.max(lastPeriod, lastBullet);
+            
+            if (breakPoint > -1) {
+              const before = longText.substring(0, breakPoint + 1);
+              const after = longText.substring(breakPoint + 1);
+              return `${before}<br>${after}<strong>${colonItem}</strong>`;
+            }
+            return `${longText}<br><strong>${colonItem}</strong>`;
           });
           
           // Step 2: 箇条書きマーカーの前で改行
@@ -945,6 +990,15 @@
           specificItems.forEach(pattern => {
             processedContent = processedContent.replace(pattern, '<br><strong>$1</strong>');
           });
+          
+          // デバッグ: 処理後の内容を確認
+          if (processedContent.includes('<br>')) {
+            console.log('✅ 改行処理を適用しました');
+            console.log('📝 処理後（最初の150文字）:', processedContent.substring(0, 150) + '...');
+          } else if (processedContent.length > 100) {
+            console.log('⚠️ 長い文章ですが改行されませんでした');
+            console.log('📝 内容:', processedContent.substring(0, 100) + '...');
+          }
           
           return `<p>${processedContent}</p>`;
         }).filter(p => p).join('\n\n');
