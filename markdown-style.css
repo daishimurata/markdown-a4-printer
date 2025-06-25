@@ -69,7 +69,10 @@ h5, h6 {
 /* Paragraphs */
 p {
     margin-bottom: 12pt;
-    line-height: 1.7;
+    line-height: 1.8;
+    text-align: justify;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Lists */
@@ -177,7 +180,10 @@ br {
 /* Better spacing for Japanese document patterns */
 p {
     margin-bottom: 12pt;
-    line-height: 1.7;
+    line-height: 1.8;
+    text-align: justify;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* When a paragraph contains multiple strong elements, ensure proper spacing */
@@ -386,6 +392,22 @@ p strong {
 
 /* 段落内での適切な改行処理 */
 p br {
-    display: inline;
-    white-space: pre-line;
+    display: inline !important;
+    white-space: normal !important;
+}
+
+/* 箇条書きマーカーの改行処理 */
+p br + span:first-of-type {
+    margin-left: 0;
+}
+
+/* 強調テキスト後の自然な流れ */
+strong + br {
+    display: inline !important;
+}
+
+/* 日本語文書での読みやすさ向上 */
+p {
+    text-justify: inter-ideograph;
+    hanging-punctuation: allow-end;
 } 

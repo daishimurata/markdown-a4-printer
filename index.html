@@ -861,17 +861,53 @@
             return '<hr>';
           }
           
-          // 段落内の改行をより自然に処理
-          // 連続する改行は段落分けとして扱う
-          const lines = paragraph.split('\n');
-          const processedLines = lines.map(line => line.trim()).filter(line => line);
+          // 日本語文書での改行処理を改善
+          const lines = paragraph.split('\n').map(line => line.trim()).filter(line => line);
           
-          // 複数行がある場合は、適切に改行を保持
-          if (processedLines.length > 1) {
-            return `<p>${processedLines.join('<br>\n')}</p>`;
-          } else {
-            return `<p>${processedLines[0]}</p>`;
+          // 単一行の場合
+          if (lines.length === 1) {
+            return `<p>${lines[0]}</p>`;
           }
+          
+          // 複数行の場合 - 日本語の自然な改行を考慮
+          let processedContent = lines.join(' ');
+          
+          // 箇条書きマーカーのパターンを検出
+          const bulletPatterns = [
+            /([。！？])\s*([・])/g,    // 句点の後の中点
+            /([。！？])\s*(-)/g,      // 句点の後のハイフン
+            /：\s*([・-])/g,          // コロンの後の箇条書き
+            /(です|ます)。\s*([・-])/g, // 敬語の後の箇条書き
+          ];
+          
+          // 項目区切りのパターン
+          const itemSeparators = [
+            /([。！？])\s*([A-Za-z一-龯]+：)/g,  // 句点の後の項目名
+            /\s*([A-Za-z一-龯]+：)\s*/g,       // 項目名の前後
+            /(です|ます)。\s*([A-Za-z一-龯]+：)/g, // 敬語の後の項目名
+          ];
+          
+          // 箇条書きマーカーで改行
+          bulletPatterns.forEach(pattern => {
+            processedContent = processedContent.replace(pattern, '$1<br>$2');
+          });
+          
+          // 項目区切りで改行
+          itemSeparators.forEach(pattern => {
+            processedContent = processedContent.replace(pattern, '$1<br><strong>$2</strong>');
+          });
+          
+          // 長い文章での自然な改行ポイント
+          const naturalBreaks = [
+            /([、，])\s+([あ-ん一-龯]{10,})/g,  // 長い文の読点後
+            /([。])\s+([あ-ん一-龯]{15,})/g,   // 長い文の句点後
+          ];
+          
+          naturalBreaks.forEach(pattern => {
+            processedContent = processedContent.replace(pattern, '$1<br>$2');
+          });
+          
+          return `<p>${processedContent}</p>`;
         }).filter(p => p).join('\n\n');
         
         // 余分な改行を整理
