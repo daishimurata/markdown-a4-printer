@@ -918,24 +918,35 @@
           
           // Step 1.6: 中点（・）で区切られた長いリストの確実な分割
           // 「項目：説明・項目：説明・項目：説明」パターンを全て分割
+          console.log('Step 1.6: 中点分割処理開始');
           const bulletSeparatedPattern = /・([^：・]{2,30}：)/g;
+          const beforeBulletSplit = processedContent;
           processedContent = processedContent.replace(bulletSeparatedPattern, '<br><strong>$1</strong>');
+          if (beforeBulletSplit !== processedContent) {
+            console.log('✅ 中点での分割を実行しました');
+          }
           
-          // Step 1.7: 残った長い文章でコロンが含まれる部分の分割
-          const remainingColonPattern = /([^<>\n]{50,})([^：]{2,30}：)/g;
-          processedContent = processedContent.replace(remainingColonPattern, (match, longText, colonItem) => {
-            // 長いテキストの中で最後の適切な区切り点を見つける
-            const lastPeriod = longText.lastIndexOf('。');
-            const lastBullet = longText.lastIndexOf('・');
-            const breakPoint = Math.max(lastPeriod, lastBullet);
-            
-            if (breakPoint > -1) {
-              const before = longText.substring(0, breakPoint + 1);
-              const after = longText.substring(breakPoint + 1);
-              return `${before}<br>${after}<strong>${colonItem}</strong>`;
-            }
-            return `${longText}<br><strong>${colonItem}</strong>`;
+          // Step 1.6.1: より強力な中点分割（残った分も処理）
+          const strongBulletPattern = /([^・<>]{10,})・([^・<>]{2,25}：)/g;
+          processedContent = processedContent.replace(strongBulletPattern, '$1<br><strong>$2</strong>');
+          
+          // Step 1.6.2: 特定の項目名での強制分割
+          const specificItemNames = [
+            '言い方の変化：', '表の使い方の変化：', '性的な発言の出現：', '若年層との衝突の機会：',
+            '世話焼き行動：', '作業への集中しすぎ：', '注意を引きたがる行動：', '一人時間の過ごし方：',
+            '相談ができるようになった：', '自制心の向上：', '素直さ：', '作業意欲の向上：', '学習能力：',
+            '医命連携の緊急強化：', '性的行動への対応策検討：', '関わり方改善指導：', '環境調整の基本的見直し：',
+            '一人時間の過ごし方指導：', '被害者意識への対応：', 'ストレス要因の特定と対処：'
+          ];
+          
+          specificItemNames.forEach(itemName => {
+            const pattern = new RegExp(`([^<>]{10,})(${itemName.replace(/：/g, '：')})`, 'g');
+            processedContent = processedContent.replace(pattern, '$1<br><strong>$2</strong>');
           });
+          
+          // Step 1.6.3: 文章の途中に項目名が含まれている場合の分割
+          const midSentencePattern = /([。ます]{1}[^<>]{0,5})([あ-ん一-龯ァ-ヶー]{2,15}：)/g;
+          processedContent = processedContent.replace(midSentencePattern, '$1<br><strong>$2</strong>');
           
           // Step 2: 箇条書きマーカーの前で改行
           const bulletPatterns = [
@@ -998,6 +1009,21 @@
           } else if (processedContent.length > 100) {
             console.log('⚠️ 長い文章ですが改行されませんでした');
             console.log('📝 内容:', processedContent.substring(0, 100) + '...');
+          }
+          
+          // 最終処理: 残った長い文章で項目名パターンを強制分割
+          if (processedContent.length > 100 && !processedContent.includes('<br>')) {
+            console.log('🔧 最終処理: 強制分割を実行');
+            
+            // 任意の項目名パターン（○○：）での分割
+            const finalPattern = /([^<>]{20,})([あ-ん一-龯ァ-ヶー]{2,20}[のがに]?[変化|発言|機会|行動|向上|能力|検討|指導|見直し|対応|強化|策定|習得|支援|課題|問題|対策|方針|計画]+：)/g;
+            processedContent = processedContent.replace(finalPattern, '$1<br><strong>$2</strong>');
+            
+            // 中点での最終分割
+            const finalBulletPattern = /([^<>]{15,})・([^<>]{5,})/g;
+            processedContent = processedContent.replace(finalBulletPattern, '$1<br>・$2');
+            
+            console.log('🔧 最終処理完了');
           }
           
           return `<p>${processedContent}</p>`;
