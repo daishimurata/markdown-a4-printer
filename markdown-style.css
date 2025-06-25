@@ -388,6 +388,9 @@ p + p {
 /* 強調テキスト後の改行を自然に */
 p strong {
     display: inline;
+    font-weight: 600;
+    color: #000;
+    margin-right: 4pt;
 }
 
 /* 段落内での適切な改行処理 */
@@ -410,4 +413,25 @@ strong + br {
 p {
     text-justify: inter-ideograph;
     hanging-punctuation: allow-end;
+}
+
+/* 項目リストでの改行後の字下げ */
+p br + * {
+    margin-left: 8pt;
+}
+
+/* 支援内容や課題項目の見やすさ向上 */
+p br + strong {
+    background-color: #f8f8f8;
+    padding: 2pt 4pt;
+    border-radius: 2pt;
+    margin: 4pt 0;
+    display: inline-block;
+}
+
+/* 基本情報セクションの項目間隔 */
+.basic-info p,
+.info-section p {
+    margin-bottom: 4pt;
+    line-height: 1.5;
 } 

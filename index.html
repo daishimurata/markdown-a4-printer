@@ -872,39 +872,78 @@
           // 複数行の場合 - 日本語の自然な改行を考慮
           let processedContent = lines.join(' ');
           
-          // 箇条書きマーカーのパターンを検出
+          // Step 1: コロンで区切られた項目を検出して改行
+          const colonPatterns = [
+            /([^：。！？]+：)([^：。！？]{20,}?)([・\s]*[^：。！？]+：)/g,  // 長い項目の後に次の項目
+            /([。！？])\s*([^：。！？]{2,20}：)/g,                    // 句点の後の項目名
+            /(です|ます|した|する)。?\s*([^：。！？]{2,20}：)/g,        // 動詞の後の項目名
+          ];
+          
+          colonPatterns.forEach(pattern => {
+            processedContent = processedContent.replace(pattern, (match, ...groups) => {
+              if (groups.length === 3) {
+                // 3つのグループがある場合（長い項目パターン）
+                return `${groups[0]}<br>${groups[1]}<br><strong>${groups[2]}</strong>`;
+              } else if (groups.length === 2) {
+                // 2つのグループがある場合
+                return `${groups[0]}<br><strong>${groups[1]}</strong>`;
+              }
+              return match;
+            });
+          });
+          
+          // Step 2: 箇条書きマーカーの前で改行
           const bulletPatterns = [
-            /([。！？])\s*([・])/g,    // 句点の後の中点
-            /([。！？])\s*(-)/g,      // 句点の後のハイフン
-            /：\s*([・-])/g,          // コロンの後の箇条書き
-            /(です|ます)。\s*([・-])/g, // 敬語の後の箇条書き
+            /([。！？])\s*([・－−])/g,        // 句点の後の箇条書きマーカー
+            /([です|ます])\s*([・－−])/g,      // 敬語の後の箇条書きマーカー
+            /([：])\s*([・－−])/g,            // コロンの後の箇条書きマーカー
           ];
           
-          // 項目区切りのパターン
-          const itemSeparators = [
-            /([。！？])\s*([A-Za-z一-龯]+：)/g,  // 句点の後の項目名
-            /\s*([A-Za-z一-龯]+：)\s*/g,       // 項目名の前後
-            /(です|ます)。\s*([A-Za-z一-龯]+：)/g, // 敬語の後の項目名
-          ];
-          
-          // 箇条書きマーカーで改行
           bulletPatterns.forEach(pattern => {
             processedContent = processedContent.replace(pattern, '$1<br>$2');
           });
           
-          // 項目区切りで改行
-          itemSeparators.forEach(pattern => {
-            processedContent = processedContent.replace(pattern, '$1<br><strong>$2</strong>');
-          });
-          
-          // 長い文章での自然な改行ポイント
+          // Step 3: 長すぎる文章での自然な改行ポイント
           const naturalBreaks = [
-            /([、，])\s+([あ-ん一-龯]{10,})/g,  // 長い文の読点後
-            /([。])\s+([あ-ん一-龯]{15,})/g,   // 長い文の句点後
+            /([、，])\s*([あ-ん一-龯ァ-ヶー]{15,})/g,     // 長い日本語の前
+            /([。])\s*([あ-ん一-龯ァ-ヶー]{20,})/g,      // 非常に長い文の前
+            /([です|ます])\s*([あ-ん一-龯ァ-ヶー]{15,})/g, // 敬語の後の長い文
           ];
           
           naturalBreaks.forEach(pattern => {
             processedContent = processedContent.replace(pattern, '$1<br>$2');
+          });
+          
+          // Step 4: 特定のキーワードでの改行（支援内容等）
+          const supportKeywords = [
+            /(検討|指導|対応|策定|見直し|強化|改善)[:：]\s*/g,
+            /(課題|問題|支援|対策|方針|計画)[:：]\s*/g,
+          ];
+          
+          supportKeywords.forEach(pattern => {
+            processedContent = processedContent.replace(pattern, '<br><strong>$1：</strong>');
+          });
+          
+          // Step 5: 基本情報や項目データの改行処理
+          const structuredDataPatterns = [
+            /([氏名|作成日|計画期間|実施者|モニタリング|評価者]+[:：])\s*([^\s]+)\s+([氏名|作成日|計画期間|実施者|モニタリング|評価者]+[:：])/g,
+            /(\$\d+\s*[^\$]+)\s+(\$\d+)/g,  // $2 形式のデータ
+            /(令和\d+年\d+月\d+日)\s+(令和\d+年\d+月\d+日)/g,  // 日付の連続
+          ];
+          
+          structuredDataPatterns.forEach(pattern => {
+            processedContent = processedContent.replace(pattern, '$1<br>$2');
+          });
+          
+          // Step 6: 項目名の強調と改行（より具体的）
+          const specificItems = [
+            /(医命連携の緊急強化|性的行動への対応策検討|関わり方改善指導|環境調整の基本的見直し|一人時間の過ごし方指導|被害者意識への対応|ストレス要因の特定と対処)[:：]/g,
+            /(言い方の変化|表の使い方の変化|食事への集中しすぎ|性的な発言の出現|若年層との衝突の機会|注意を引きたがる行動|一人時間の過ごし方)[:：]/g,
+            /(相談ができるようになった|自制心の向上|素直さ|作業意欲の向上|学習能力)[:：]/g,
+          ];
+          
+          specificItems.forEach(pattern => {
+            processedContent = processedContent.replace(pattern, '<br><strong>$1</strong>');
           });
           
           return `<p>${processedContent}</p>`;
