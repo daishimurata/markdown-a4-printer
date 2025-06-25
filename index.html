@@ -845,21 +845,34 @@
         // 引用
         html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
         
-        // 段落処理
+        // 段落処理を改善
         html = html.split(/\n\s*\n/).map(paragraph => {
           paragraph = paragraph.trim();
           if (!paragraph) return '';
           
-          if (paragraph.includes('<')) {
+          // HTMLタグが含まれている場合はそのまま返す
+          if (paragraph.includes('<h') || paragraph.includes('<ul') || paragraph.includes('<ol') || 
+              paragraph.includes('<table') || paragraph.includes('<blockquote') || paragraph.includes('<hr')) {
             return paragraph;
           }
           
+          // 署名欄パターンをチェック
           if (paragraph.match(/^---+$/) || paragraph.match(/^\*\*\*+$/) || paragraph.match(/^___+$/)) {
             return '<hr>';
           }
           
-          return `<p>${paragraph.replace(/\n/g, '<br>')}</p>`;
-        }).join('\n');
+          // 段落内の改行をより自然に処理
+          // 連続する改行は段落分けとして扱う
+          const lines = paragraph.split('\n');
+          const processedLines = lines.map(line => line.trim()).filter(line => line);
+          
+          // 複数行がある場合は、適切に改行を保持
+          if (processedLines.length > 1) {
+            return `<p>${processedLines.join('<br>\n')}</p>`;
+          } else {
+            return `<p>${processedLines[0]}</p>`;
+          }
+        }).filter(p => p).join('\n\n');
         
         // 余分な改行を整理
         html = html.replace(/\n+/g, '\n');
@@ -1030,7 +1043,7 @@
       }
       
       fixGoalPeriodLineBreaks() {
-        console.log('🔧 fixGoalPeriodLineBreaks メソッドが呼び出されました');
+        console.log('🔧 fixGoalPeriodLineBreaks メソッドが呼び出されました（改善版）');
         const content = document.getElementById('documentContent');
         
         if (!content) {
@@ -1038,77 +1051,47 @@
           return;
         }
         
-        // 全体のHTMLを取得して処理
-        let contentHtml = content.innerHTML;
-        console.log('📄 修正前のHTML（最初の500文字）:', contentHtml.substring(0, 500));
-        console.log('🔍 HTMLに「目標：」が含まれているか:', contentHtml.includes('目標：'));
-        console.log('🔍 HTMLに「期間：」が含まれているか:', contentHtml.includes('期間：'));
-        
-        // 「期間：」を含むstrongタグにクラスを追加し、前に改行を挿入
-        contentHtml = contentHtml.replace(/<strong>期間：<\/strong>/gi, '</p><p><strong class="period-break">期間：</strong>');
-        
-        // 「目標：」を含むstrongタグにクラスを追加し、前に改行を挿入
-        contentHtml = contentHtml.replace(/<strong>目標：<\/strong>/gi, '</p><p><strong class="goal-break">目標：</strong>');
-        
-        // 短期目標の場合も同様に処理
-        contentHtml = contentHtml.replace(/<strong>短期目標([①②③④⑤])<\/strong>/gi, '</p><p><strong class="goal-break">短期目標$1</strong>');
-        
-        // 署名欄の項目間にも改行を追加
-        contentHtml = contentHtml.replace(/<strong>日付：<\/strong>/gi, '</p><p><strong>日付：</strong>');
-        contentHtml = contentHtml.replace(/<strong>家族署名：<\/strong>/gi, '</p><p><strong>家族署名：</strong>');
-        contentHtml = contentHtml.replace(/<strong>続柄：<\/strong>/gi, '</p><p><strong>続柄：</strong>');
-        
-        // ヘッダー部分の項目間にも改行を追加
-        contentHtml = contentHtml.replace(/<strong>作成年月日：<\/strong>/gi, '</p><p><strong>作成年月日：</strong>');
-        contentHtml = contentHtml.replace(/<strong>計画作成者：<\/strong>/gi, '</p><p><strong>計画作成者：</strong>');
-        contentHtml = contentHtml.replace(/<strong>計画期間：<\/strong>/gi, '</p><p><strong>計画期間：</strong>');
-        contentHtml = contentHtml.replace(/<strong>氏名：<\/strong>/gi, '</p><p><strong>氏名：</strong>');
-        
-        // 空の段落を削除
-        contentHtml = contentHtml.replace(/<p><\/p>/gi, '');
-        contentHtml = contentHtml.replace(/<p>\s*<\/p>/gi, '');
-        
-        console.log('📝 修正後のHTML（最初の500文字）:', contentHtml.substring(0, 500));
-        console.log('✅ HTMLの修正が完了しました');
-        
-        // 修正したHTMLを適用
-        content.innerHTML = contentHtml;
-        console.log('🔄 修正したHTMLをDOMに適用しました');
-        
-        // さらに確実にするため、個別の段落でも処理
-        setTimeout(() => {
-          const paragraphs = content.querySelectorAll('p');
-          paragraphs.forEach((p, index) => {
-            const text = p.textContent;
-            if (text.includes('期間：') && text.includes('目標：')) {
-              console.log(`段落 ${index} に目標と期間が同じ行にあります:`, text.substring(0, 100));
-              
-              // 段落を分割
-              let html = p.innerHTML;
-              html = html.replace(/(<strong>目標：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>期間：<\/strong>)/gi, '$1</p><p>$2');
-              
-              if (html !== p.innerHTML) {
-                console.log('段落を分割しました');
-                p.outerHTML = '<p>' + html + '</p>';
-              }
-            }
-            
-            // 署名欄の項目も同様に処理
-            if (text.includes('本人署名：') && text.includes('日付：')) {
-              console.log(`段落 ${index} に署名項目が同じ行にあります:`, text.substring(0, 100));
-              
-              let html = p.innerHTML;
-              html = html.replace(/(<strong>本人署名：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>日付：<\/strong>)/gi, '$1</p><p>$2');
-              html = html.replace(/(<strong>家族署名：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>日付：<\/strong>)/gi, '$1</p><p>$2');
-              html = html.replace(/(<strong>日付：<\/strong>[^<]*(?:<[^>]*>[^<]*)*?)(<strong>続柄：<\/strong>)/gi, '$1</p><p>$2');
-              
-              if (html !== p.innerHTML) {
-                console.log('署名欄の段落を分割しました');
-                p.outerHTML = '<p>' + html + '</p>';
-              }
+        // 各段落を個別に処理して、より自然な改行を実現
+        const paragraphs = content.querySelectorAll('p');
+        paragraphs.forEach((p, index) => {
+          const text = p.textContent;
+          let html = p.innerHTML;
+          
+          // 複数の項目が同じ段落に含まれている場合に、適切に分割
+          const patterns = [
+            { from: /(<strong>期間：<\/strong>[^<]*?)(<strong>目標：<\/strong>)/gi, split: true },
+            { from: /(<strong>目標：<\/strong>[^<]*?)(<strong>期間：<\/strong>)/gi, split: true },
+            { from: /(<strong>本人署名：<\/strong>[^<]*?)(<strong>日付：<\/strong>)/gi, split: true },
+            { from: /(<strong>家族署名：<\/strong>[^<]*?)(<strong>日付：<\/strong>)/gi, split: true },
+            { from: /(<strong>日付：<\/strong>[^<]*?)(<strong>続柄：<\/strong>)/gi, split: true },
+            { from: /(<strong>作成年月日：<\/strong>[^<]*?)(<strong>計画作成者：<\/strong>)/gi, split: true },
+            { from: /(<strong>計画作成者：<\/strong>[^<]*?)(<strong>計画期間：<\/strong>)/gi, split: true },
+            { from: /(<strong>氏名：<\/strong>[^<]*?)(<strong>作成年月日：<\/strong>)/gi, split: true }
+          ];
+          
+          let modified = false;
+          patterns.forEach(pattern => {
+            if (pattern.split && pattern.from.test(html)) {
+              html = html.replace(pattern.from, '$1</p>\n<p>$2');
+              modified = true;
             }
           });
-        }, 100);
+          
+          if (modified) {
+            console.log(`段落 ${index} を自然に分割しました`);
+            p.outerHTML = '<p>' + html + '</p>';
+          }
+        });
+        
+        // 空の段落を削除
+        const emptyParagraphs = content.querySelectorAll('p');
+        emptyParagraphs.forEach(p => {
+          if (!p.textContent.trim()) {
+            p.remove();
+          }
+        });
+        
+        console.log('✅ 自然な改行処理が完了しました');
       }
       
       enableButtons() {

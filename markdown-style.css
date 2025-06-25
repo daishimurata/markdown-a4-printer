@@ -68,9 +68,8 @@ h5, h6 {
 
 /* Paragraphs */
 p {
-    margin-bottom: 8pt;
-    color: #333;
-    line-height: 1.6;
+    margin-bottom: 12pt;
+    line-height: 1.7;
 }
 
 /* Lists */
@@ -169,16 +168,16 @@ strong {
 
 /* Ensure line breaks are properly displayed */
 br {
-    display: block !important;
-    margin: 6pt 0 !important;
-    line-height: 0 !important;
-    height: 6pt !important;
+    display: inline !important;
+    line-height: inherit !important;
+    height: auto !important;
+    margin: 0 !important;
 }
 
 /* Better spacing for Japanese document patterns */
 p {
-    margin-bottom: 8pt;
-    line-height: 1.6;
+    margin-bottom: 12pt;
+    line-height: 1.7;
 }
 
 /* When a paragraph contains multiple strong elements, ensure proper spacing */
@@ -190,20 +189,14 @@ p strong + br + br + strong {
 /* Force specific patterns to display as block elements */
 .period-break,
 .goal-break {
-    display: block !important;
-    margin-top: 12pt !important;
-    margin-bottom: 6pt !important;
+    display: inline;
+    margin-right: 8pt;
 }
 
 /* Signature line styling */
 .signature-line {
-    display: inline-block;
-    border-bottom: 1px solid #333;
-    min-width: 120pt;
-    font-family: 'Courier New', monospace;
-    color: transparent;
-    line-height: 1.2;
-    margin: 0 2pt;
+    display: inline;
+    white-space: nowrap;
 }
 
 em {
@@ -379,4 +372,20 @@ em {
 /* Priority Indicators */
 .priority-high { color: #000; font-weight: 700; }
 .priority-medium { color: #333; font-weight: 600; }
-.priority-low { color: #666; font-weight: 400; } 
+.priority-low { color: #666; font-weight: 400; }
+
+/* 連続する段落の間隔を調整 */
+p + p {
+    margin-top: 0;
+}
+
+/* 強調テキスト後の改行を自然に */
+p strong {
+    display: inline;
+}
+
+/* 段落内での適切な改行処理 */
+p br {
+    display: inline;
+    white-space: pre-line;
+} 
