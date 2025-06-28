@@ -56,6 +56,25 @@ No build process required! This is a pure client-side application.
    - Click "Print A4" for perfect printing
    - Use "Save HTML" to export the document
 
+## 📘 Writing Guide
+
+For best results when creating Markdown documents for A4 printing, please refer to our comprehensive writing guidelines:
+
+**👉 [Markdown A4 プリンター 使用ガイドライン](MARKDOWN_GUIDELINES.md)**
+
+This guide provides:
+- ✅ Best practices for structure and formatting
+- ❌ Common mistakes to avoid
+- 📊 Sample templates for different document types
+- 🎨 Layout optimization tips
+- 🔧 Troubleshooting common issues
+
+**Key principles:**
+- Use proper Markdown structure instead of relying on complex processing
+- Split long content into appropriate paragraphs and lists
+- Utilize tables for complex data presentation
+- Follow consistent formatting patterns
+
 ## 📋 Supported Markdown Features
 
 | Feature | Syntax | Output |
